@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { objectives, keyResults, skills, teams, dynamics, getDynamicById, getKeyResultsForObjective, getTeamById, getSkillById } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,9 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
-  Target
+  Target,
+  ExternalLink,
+  ChevronRight
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -26,6 +28,7 @@ import { cn } from '@/lib/utils';
 export default function Objectives() {
   const { t, language } = useLanguage();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -238,6 +241,28 @@ export default function Objectives() {
                     className="border-t border-border"
                   >
                     <div className="p-5 space-y-5">
+                      {/* Breadcrumb Traceability */}
+                      <div className="flex items-center gap-2 text-sm bg-muted/30 p-3 rounded-lg">
+                        <span className="text-muted-foreground">{language === 'es' ? 'Trazabilidad:' : 'Traceability:'}</span>
+                        {dynamic && (
+                          <span className={cn(
+                            "px-2 py-0.5 rounded font-medium",
+                            colorBgs[dynamic.color],
+                            colorTexts[dynamic.color]
+                          )}>
+                            {language === 'es' ? dynamic.nameEs : dynamic.name}
+                          </span>
+                        )}
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium truncate max-w-[300px]">
+                          {language === 'es' ? objective.titleEs : objective.title}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                          {objectiveKeyResults.length} {language === 'es' ? 'Resultados Clave' : 'Key Results'}
+                        </span>
+                      </div>
+
                       {/* Objective Description */}
                       <div>
                         <h4 className="text-sm font-semibold mb-2">
@@ -282,10 +307,18 @@ export default function Objectives() {
                                   <div className="flex items-center gap-1">
                                     <Users className="h-3 w-3" />
                                     {krTeams.map((team, i) => (
-                                      <span key={team!.id}>
+                                      <button
+                                        key={team!.id}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          navigate(`/teams?highlight=${team!.id}`);
+                                        }}
+                                        className="hover:text-primary hover:underline transition-colors inline-flex items-center gap-0.5"
+                                      >
                                         {language === 'es' ? team!.nameEs : team!.name}
-                                        {i < krTeams.length - 1 && ', '}
-                                      </span>
+                                        <ExternalLink className="h-2.5 w-2.5" />
+                                        {i < krTeams.length - 1 && <span className="text-muted-foreground">,</span>}
+                                      </button>
                                     ))}
                                   </div>
                                 </div>
