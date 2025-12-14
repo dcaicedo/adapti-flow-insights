@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   teams, 
   objectives, 
   dynamics, 
   strategicUnits, 
-  keyResults,
-  getObjectiveById, 
-  getDynamicById, 
-  getTeamById,
-  getKeyResultsForObjective 
+  getKeyResultsForObjective, 
+  getTeamById 
 } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { DynamicBadge } from '@/components/ui/DynamicBadge';
+import { getDynamicColorClasses, getTeamColor } from '@/utils/dynamicColors';
 import { 
   Network, 
   Target, 
@@ -22,40 +22,16 @@ import {
   ChevronRight,
   ChevronDown,
   Building2,
-  Layers,
-  ArrowRight,
-  Sparkles
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export default function Structure() {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
+  const navigate = useNavigate();
   const [expandedDynamic, setExpandedDynamic] = useState<string | null>(null);
   const [expandedObjective, setExpandedObjective] = useState<string | null>(null);
-
-  const colorBgs: Record<string, string> = {
-    'adaptativa-blue': 'bg-adaptativa-blue',
-    'culture-yellow': 'bg-culture-yellow',
-    'business-cyan': 'bg-business-cyan',
-    'structure-neutral': 'bg-structure-neutral',
-    'entrepreneurship-green': 'bg-entrepreneurship-green',
-  };
-
-  const colorTexts: Record<string, string> = {
-    'adaptativa-blue': 'text-adaptativa-blue',
-    'culture-yellow': 'text-culture-yellow',
-    'business-cyan': 'text-business-cyan',
-    'structure-neutral': 'text-structure-neutral',
-    'entrepreneurship-green': 'text-entrepreneurship-green',
-  };
-
-  const colorBgLight: Record<string, string> = {
-    'adaptativa-blue': 'bg-adaptativa-blue/10',
-    'culture-yellow': 'bg-culture-yellow/10',
-    'business-cyan': 'bg-business-cyan/10',
-    'structure-neutral': 'bg-structure-neutral/10',
-    'entrepreneurship-green': 'bg-entrepreneurship-green/10',
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -80,8 +56,8 @@ export default function Structure() {
       {/* Header */}
       <motion.div variants={itemVariants}>
         <h1 className="text-2xl lg:text-3xl font-bold text-foreground flex items-center gap-3">
-          <Network className="h-8 w-8 text-structure-neutral" />
-          {t('structure.title')}
+          <Network className="h-8 w-8 text-structure-magenta" />
+          {language === 'es' ? 'Estructura Adaptativa' : 'Adaptive Structure'}
         </h1>
         <p className="text-muted-foreground mt-1">
           {language === 'es' 
@@ -92,22 +68,17 @@ export default function Structure() {
 
       {/* Legend */}
       <motion.div variants={itemVariants} className="flex flex-wrap gap-6">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <span className="text-sm text-muted-foreground">{language === 'es' ? 'Dinámica Adaptativa' : 'Adaptive Dynamic'}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Target className="h-4 w-4 text-primary" />
-          <span className="text-sm text-muted-foreground">{language === 'es' ? 'Objetivo' : 'Objective'}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-adaptativa-blue" />
-          <span className="text-sm text-muted-foreground">{language === 'es' ? 'Resultado Clave' : 'Key Result'}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{language === 'es' ? 'Equipo' : 'Team'}</span>
-        </div>
+        {dynamics.map(dynamic => {
+          const colors = getDynamicColorClasses(dynamic.color);
+          return (
+            <div key={dynamic.id} className="flex items-center gap-2">
+              <span className="text-lg">{dynamic.icon}</span>
+              <span className={cn("text-sm font-medium", colors.text)}>
+                {language === 'es' ? dynamic.nameEs : dynamic.name}
+              </span>
+            </div>
+          );
+        })}
       </motion.div>
 
       {/* Dynamics -> Objectives -> Key Results -> Teams */}
@@ -115,25 +86,24 @@ export default function Structure() {
         {dynamics.map((dynamic) => {
           const dynamicObjectives = objectives.filter(obj => obj.dynamicId === dynamic.id);
           const isExpanded = expandedDynamic === dynamic.id;
+          const colors = getDynamicColorClasses(dynamic.color);
 
           return (
             <motion.div key={dynamic.id} variants={itemVariants}>
               <Card className="shadow-sm overflow-hidden">
-                {/* Dynamic Header */}
-                <div 
-                  className={cn("h-1", colorBgs[dynamic.color])}
-                />
+                {/* Dynamic Header - Color indicator */}
+                <div className={cn("h-1.5", colors.bg)} />
                 <div 
                   className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
                   onClick={() => setExpandedDynamic(isExpanded ? null : dynamic.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={cn("p-2 rounded-lg", colorBgLight[dynamic.color])}>
-                        <Sparkles className={cn("h-5 w-5", colorTexts[dynamic.color])} />
+                      <div className={cn("p-2 rounded-lg", colors.bgLight)}>
+                        <span className="text-xl">{dynamic.icon}</span>
                       </div>
                       <div>
-                        <h3 className={cn("font-semibold", colorTexts[dynamic.color])}>
+                        <h3 className={cn("font-semibold", colors.text)}>
                           {language === 'es' ? dynamic.nameEs : dynamic.name}
                         </h3>
                         <p className="text-sm text-muted-foreground">
@@ -167,7 +137,7 @@ export default function Structure() {
                         const isObjExpanded = expandedObjective === objective.id;
 
                         return (
-                          <div key={objective.id} className="bg-background rounded-lg border border-border overflow-hidden">
+                          <div key={objective.id} className={cn("bg-background rounded-lg border overflow-hidden", colors.border, "border-opacity-30")}>
                             {/* Objective Header */}
                             <div 
                               className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
@@ -175,7 +145,7 @@ export default function Structure() {
                             >
                               <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-start gap-3">
-                                  <Target className={cn("h-5 w-5 mt-0.5", colorTexts[dynamic.color])} />
+                                  <Target className={cn("h-5 w-5 mt-0.5", colors.text)} />
                                   <div>
                                     <h4 className="font-medium text-foreground">
                                       {language === 'es' ? objective.titleEs : objective.title}
@@ -212,7 +182,7 @@ export default function Structure() {
                                       <div key={kr.id} className="bg-background p-4 rounded-lg border border-border">
                                         <div className="flex items-start justify-between gap-3 mb-3">
                                           <div className="flex items-start gap-2">
-                                            <div className={cn("w-2 h-2 rounded-full mt-2", colorBgs[dynamic.color])} />
+                                            <div className={cn("w-2 h-2 rounded-full mt-2", colors.bg)} />
                                             <div>
                                               <p className="font-medium text-sm">
                                                 {language === 'es' ? kr.titleEs : kr.title}
@@ -225,29 +195,32 @@ export default function Structure() {
                                           <StatusBadge status={kr.status} size="sm" />
                                         </div>
 
-                                        <ProgressBar value={kr.progress} size="sm" showLabel />
+                                        <ProgressBar value={kr.progress} color={dynamic.color} size="sm" showLabel />
 
                                         {/* Teams contributing */}
                                         <div className="mt-3 pt-3 border-t border-border">
                                           <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
                                             <Users className="h-3 w-3" />
-                                            {language === 'es' ? 'Equipos contribuyentes:' : 'Contributing Teams:'}
+                                            {krTeams.length} {language === 'es' ? 'Equipos contribuyentes:' : 'Contributing Teams:'}
                                           </p>
                                           <div className="flex flex-wrap gap-2">
                                             {krTeams.map(team => team && (
-                                              <div 
+                                              <Button
                                                 key={team.id}
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  navigate(`/teams?highlight=${team.id}&kr=${kr.id}`);
+                                                }}
                                                 className={cn(
-                                                  "flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm",
+                                                  "h-8 gap-1.5 hover:bg-primary/10 hover:border-primary",
                                                   team.unitType === 'core' 
                                                     ? "border-adaptativa-blue/30 bg-adaptativa-blue/5"
                                                     : "border-border bg-muted/30"
                                                 )}
                                               >
-                                                <Users className={cn(
-                                                  "h-3 w-3",
-                                                  team.unitType === 'core' ? "text-adaptativa-blue" : "text-muted-foreground"
-                                                )} />
+                                                <span className="text-base">{team.icon}</span>
                                                 <span className="font-medium">
                                                   {language === 'es' ? team.nameEs : team.name}
                                                 </span>
@@ -257,12 +230,10 @@ export default function Structure() {
                                                     ? "bg-adaptativa-blue/10 text-adaptativa-blue"
                                                     : "bg-muted text-muted-foreground"
                                                 )}>
-                                                  {team.unitType === 'core' 
-                                                    ? (language === 'es' ? 'Core' : 'Core')
-                                                    : (language === 'es' ? 'Ext.' : 'Ext.')
-                                                  }
+                                                  {team.unitType === 'core' ? 'Core' : 'Ext.'}
                                                 </span>
-                                              </div>
+                                                <ExternalLink className="h-3 w-3 ml-1" />
+                                              </Button>
                                             ))}
                                           </div>
                                         </div>
@@ -325,17 +296,21 @@ export default function Structure() {
                     <div className="mt-3 pt-3 border-t border-border">
                       <div className="flex flex-wrap gap-1">
                         {unitTeams.map(team => (
-                          <span 
+                          <Button
                             key={team.id}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate(`/teams?highlight=${team.id}`)}
                             className={cn(
-                              "text-xs px-2 py-0.5 rounded-full",
+                              "h-auto py-0.5 px-2 text-xs",
                               team.unitType === 'core' 
-                                ? "bg-adaptativa-blue/10 text-adaptativa-blue"
-                                : "bg-muted text-muted-foreground"
+                                ? "bg-adaptativa-blue/10 text-adaptativa-blue hover:bg-adaptativa-blue/20"
+                                : "bg-muted text-muted-foreground hover:bg-muted/80"
                             )}
                           >
+                            <span className="mr-1">{team.icon}</span>
                             {language === 'es' ? team.nameEs : team.name}
-                          </span>
+                          </Button>
                         ))}
                       </div>
                     </div>
@@ -357,46 +332,51 @@ export default function Structure() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap justify-center gap-4 p-6">
-              {teams.map((team, index) => (
-                <motion.div
-                  key={team.id}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={cn(
-                    "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all hover:shadow-lg cursor-pointer",
-                    team.unitType === 'core'
-                      ? "border-adaptativa-blue/30 bg-adaptativa-blue/5"
-                      : "border-border bg-muted/30"
-                  )}
-                  style={{
-                    width: `${100 + team.members.length * 2}px`,
-                    height: `${100 + team.members.length * 2}px`,
-                  }}
-                >
-                  <Users className={cn(
-                    "h-6 w-6 mb-2",
-                    team.unitType === 'core' ? "text-adaptativa-blue" : "text-muted-foreground"
-                  )} />
-                  <p className="text-sm font-medium text-center">
-                    {language === 'es' ? team.nameEs : team.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{team.members.length}</p>
-                  <span className={cn(
-                    "text-xs mt-1 px-2 py-0.5 rounded-full",
-                    team.unitType === 'core' 
-                      ? "bg-adaptativa-blue/10 text-adaptativa-blue"
-                      : "bg-muted text-muted-foreground"
-                  )}>
-                    {team.unitType === 'core' ? 'Core' : 'Ext.'}
-                  </span>
-                </motion.div>
-              ))}
+              {teams.map((team, index) => {
+                const teamColor = getTeamColor(team.id);
+                const colors = getDynamicColorClasses(teamColor);
+
+                return (
+                  <motion.div
+                    key={team.id}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => navigate(`/teams?highlight=${team.id}`)}
+                    className={cn(
+                      "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all hover:shadow-lg cursor-pointer",
+                      team.unitType === 'core'
+                        ? cn("border-opacity-30", colors.border, colors.bgLight)
+                        : "border-border bg-muted/30"
+                    )}
+                    style={{
+                      width: `${100 + team.members.length * 2}px`,
+                      height: `${100 + team.members.length * 2}px`,
+                    }}
+                  >
+                    <span className="text-2xl mb-2">{team.icon}</span>
+                    <p className="text-sm font-medium text-center">
+                      {language === 'es' ? team.nameEs : team.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{team.members.length} {language === 'es' ? 'miembros' : 'members'}</p>
+                    <span className={cn(
+                      "text-xs mt-1 px-2 py-0.5 rounded-full",
+                      team.unitType === 'core' 
+                        ? cn(colors.bgLight, colors.text)
+                        : "bg-muted text-muted-foreground"
+                    )}>
+                      {team.unitType === 'core' ? 'Core' : 'Ext.'}
+                    </span>
+                    <ExternalLink className="h-3 w-3 mt-2 text-muted-foreground" />
+                  </motion.div>
+                );
+              })}
             </div>
             <p className="text-center text-sm text-muted-foreground mt-4">
               {language === 'es' 
-                ? 'El tamaño representa el número de miembros. El color indica el tipo de unidad.'
-                : 'Size represents team members. Color indicates unit type.'}
+                ? 'El tamaño representa el número de miembros. Haz clic para ver detalles del equipo.'
+                : 'Size represents team members. Click to view team details.'}
             </p>
           </CardContent>
         </Card>

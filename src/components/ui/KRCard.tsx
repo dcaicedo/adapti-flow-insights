@@ -156,9 +156,14 @@ export function KRCard({
               {/* Teams Section */}
               {validTeams.length > 0 && (
                 <div className="pt-3 border-t border-border">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                    <Users className="h-3 w-3" />
-                    {language === 'es' ? 'Equipos Responsables' : 'Responsible Teams'}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Users className="h-3 w-3" />
+                      {language === 'es' ? 'Equipos Responsables' : 'Responsible Teams'}
+                    </div>
+                    <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                      {validTeams.length} {language === 'es' ? 'equipos' : 'teams'}
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {validTeams.map((team) => (
