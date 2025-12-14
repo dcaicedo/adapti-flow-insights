@@ -4,12 +4,14 @@ import { dynamics, objectives } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Sparkles, ChevronRight, Target, DollarSign, TrendingUp } from 'lucide-react';
+import { Sparkles, ChevronRight, Target, DollarSign, TrendingUp, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dynamics() {
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
   const [selectedDynamic, setSelectedDynamic] = useState<string | null>(null);
 
   const getObjectivesForDynamic = (dynamicId: string) => {
@@ -137,13 +139,20 @@ export default function Dynamics() {
                       {dynamicObjectives.map((obj) => (
                         <div 
                           key={obj.id} 
-                          className="p-3 bg-muted/50 rounded-lg"
+                          className="p-3 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors cursor-pointer group"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/objectives?highlight=${obj.id}`);
+                          }}
                         >
                           <div className="flex items-start justify-between gap-3">
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium group-hover:text-primary transition-colors">
                               {language === 'es' ? obj.titleEs : obj.title}
                             </p>
-                            <StatusBadge status={obj.status} size="sm" />
+                            <div className="flex items-center gap-2">
+                              <StatusBadge status={obj.status} size="sm" />
+                              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
                           </div>
                           <div className="mt-2">
                             <ProgressBar 

@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useSearchParams } from 'react-router-dom';
 import { objectives, keyResults, skills, teams, dynamics, getDynamicById, getKeyResultsForObjective, getTeamById, getSkillById } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,9 +25,23 @@ import { cn } from '@/lib/utils';
 
 export default function Objectives() {
   const { t, language } = useLanguage();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Auto-expand objective if highlighted via URL param
+  useEffect(() => {
+    const highlightId = searchParams.get('highlight');
+    if (highlightId) {
+      setExpandedId(highlightId);
+      // Scroll to the element after a short delay
+      setTimeout(() => {
+        const element = document.getElementById(`objective-${highlightId}`);
+        element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [searchParams]);
 
   const filteredObjectives = objectives.filter(obj => {
     const title = language === 'es' ? obj.titleEs : obj.title;
@@ -152,8 +167,11 @@ export default function Objectives() {
           const allSkillIds = [...new Set(objectiveKeyResults.flatMap(kr => kr.skills))];
 
           return (
-            <motion.div key={objective.id} variants={itemVariants}>
-              <Card className="shadow-sm overflow-hidden">
+            <motion.div key={objective.id} variants={itemVariants} id={`objective-${objective.id}`}>
+              <Card className={cn(
+                "shadow-sm overflow-hidden transition-all",
+                searchParams.get('highlight') === objective.id && "ring-2 ring-primary"
+              )}>
                 <div 
                   className="p-5 cursor-pointer hover:bg-muted/30 transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : objective.id)}
