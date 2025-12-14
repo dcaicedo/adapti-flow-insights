@@ -51,7 +51,7 @@ export function DynamicCard({ dynamic, onClick }: DynamicCardProps) {
             {name}
           </div>
           <p className="text-sm text-muted-foreground">
-            {dynamic.objectives.length} {t('dynamics.objectives')}
+            {dynamic.objectiveIds?.length || 0} {t('dynamics.objectives')}
           </p>
         </div>
         <ChevronRight className="h-5 w-5 text-muted-foreground" />

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { objectives, skills, dynamics, alerts } from '@/data/demoData';
+import { objectives, skills, dynamics, alerts, keyResults } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -33,17 +33,23 @@ import {
 export default function Reports() {
   const { t, language } = useLanguage();
 
-  // Skills vs Objectives data
-  const skillsVsObjectives = dynamics.map(d => ({
-    name: language === 'es' ? d.nameEs : d.name,
-    progress: d.progress,
-    skills: Math.round(
-      skills
-        .filter(s => objectives.filter(o => o.dynamicId === d.id).some(o => o.skills.includes(s.id)))
-        .reduce((sum, s) => sum + ((s.currentValue / 5) * 100), 0) /
-      Math.max(1, skills.filter(s => objectives.filter(o => o.dynamicId === d.id).some(o => o.skills.includes(s.id))).length)
-    ),
-  }));
+  // Skills vs Objectives data - using keyResults for skills
+  const skillsVsObjectives = dynamics.map(d => {
+    const dynamicObjectives = objectives.filter(o => o.dynamicId === d.id);
+    const dynamicKRs = keyResults.filter(kr => dynamicObjectives.some(o => o.keyResultIds.includes(kr.id)));
+    const dynamicSkillIds = [...new Set(dynamicKRs.flatMap(kr => kr.skills))];
+    const dynamicSkills = skills.filter(s => dynamicSkillIds.includes(s.id));
+    
+    const avgSkill = dynamicSkills.length > 0
+      ? Math.round(dynamicSkills.reduce((sum, s) => sum + ((s.currentValue / 5) * 100), 0) / dynamicSkills.length)
+      : 0;
+    
+    return {
+      name: language === 'es' ? d.nameEs : d.name,
+      progress: d.progress,
+      skills: avgSkill,
+    };
+  });
 
   // Investment vs Progress data
   const investmentVsProgress = dynamics.map(d => ({
