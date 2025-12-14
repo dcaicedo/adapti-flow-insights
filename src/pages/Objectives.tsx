@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { objectives, skills, teams, dynamics, getDynamicColor } from '@/data/demoData';
+import { objectives, keyResults, skills, teams, dynamics, getDynamicById, getKeyResultsForObjective, getTeamById, getSkillById } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -10,14 +10,14 @@ import { SkillIndicator } from '@/components/ui/SkillIndicator';
 import { 
   Trophy, 
   Plus, 
-  Filter, 
   Search, 
   DollarSign, 
   Users, 
   Sparkles,
   ChevronDown,
   ChevronUp,
-  ArrowRight
+  ArrowRight,
+  Target
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -34,10 +34,6 @@ export default function Objectives() {
     const matchesStatus = !statusFilter || obj.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
-
-  const getTeam = (teamId: string) => teams.find(t => t.id === teamId);
-  const getDynamic = (dynamicId: string) => dynamics.find(d => d.id === dynamicId);
-  const getSkillsForObjective = (skillIds: string[]) => skills.filter(s => skillIds.includes(s.id));
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -84,8 +80,8 @@ export default function Objectives() {
           </h1>
           <p className="text-muted-foreground mt-1">
             {language === 'es' 
-              ? 'Gestiona objetivos SMART y habilidades conectadas' 
-              : 'Manage SMART objectives and connected skills'}
+              ? 'Objetivos estratégicos y sus Resultados Clave' 
+              : 'Strategic objectives and their Key Results'}
           </p>
         </div>
         <Button className="gap-2">
@@ -146,11 +142,14 @@ export default function Objectives() {
       {/* Objectives List */}
       <motion.div variants={containerVariants} className="space-y-4">
         {filteredObjectives.map((objective) => {
-          const team = getTeam(objective.teamId);
-          const dynamic = getDynamic(objective.dynamicId);
-          const objectiveSkills = getSkillsForObjective(objective.skills);
+          const dynamic = getDynamicById(objective.dynamicId);
+          const objectiveKeyResults = getKeyResultsForObjective(objective.id);
           const isExpanded = expandedId === objective.id;
-          const dynamicColor = getDynamicColor(objective.dynamicId);
+
+          // Calculate totals from key results
+          const totalInvestment = objectiveKeyResults.reduce((sum, kr) => sum + kr.investment, 0);
+          const totalTeams = [...new Set(objectiveKeyResults.flatMap(kr => kr.teamIds))];
+          const allSkillIds = [...new Set(objectiveKeyResults.flatMap(kr => kr.skills))];
 
           return (
             <motion.div key={objective.id} variants={itemVariants}>
@@ -178,16 +177,16 @@ export default function Objectives() {
                       </h3>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
+                          <Target className="h-4 w-4" />
+                          {objectiveKeyResults.length} {language === 'es' ? 'Resultados Clave' : 'Key Results'}
+                        </span>
+                        <span className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {team && (language === 'es' ? team.nameEs : team.name)}
+                          {totalTeams.length} {language === 'es' ? 'equipos' : 'teams'}
                         </span>
                         <span className="flex items-center gap-1">
                           <DollarSign className="h-4 w-4" />
-                          ${objective.investment.toLocaleString()}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Sparkles className="h-4 w-4" />
-                          {objectiveSkills.length} {language === 'es' ? 'habilidades' : 'skills'}
+                          ${totalInvestment.toLocaleString()}
                         </span>
                       </div>
                     </div>
@@ -206,7 +205,7 @@ export default function Objectives() {
                   <div className="mt-4">
                     <ProgressBar 
                       value={objective.progress} 
-                      color={dynamicColor} 
+                      color={dynamic?.color} 
                       showLabel={false}
                     />
                   </div>
@@ -220,34 +219,81 @@ export default function Objectives() {
                     exit={{ opacity: 0, height: 0 }}
                     className="border-t border-border"
                   >
-                    <div className="p-5 space-y-4">
-                      {/* SMART Description */}
+                    <div className="p-5 space-y-5">
+                      {/* Objective Description */}
                       <div>
-                        <h4 className="text-sm font-semibold mb-2">{t('objectives.smart')}</h4>
+                        <h4 className="text-sm font-semibold mb-2">
+                          {language === 'es' ? 'Descripción del Objetivo' : 'Objective Description'}
+                        </h4>
                         <p className="text-sm text-muted-foreground">
                           {language === 'es' ? objective.descriptionEs : objective.description}
                         </p>
                       </div>
 
-                      {/* Skills */}
+                      {/* Key Results */}
                       <div>
-                        <h4 className="text-sm font-semibold mb-3">{t('objectives.skills')}</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {objectiveSkills.map((skill) => (
-                            <div 
-                              key={skill.id}
-                              className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                            >
-                              <span className="text-sm font-medium">
-                                {language === 'es' ? skill.nameEs : skill.name}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <SkillIndicator value={skill.initialValue} size="sm" />
-                                <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                                <SkillIndicator value={skill.currentValue} size="sm" />
+                        <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          {language === 'es' ? 'Resultados Clave' : 'Key Results'}
+                        </h4>
+                        <div className="space-y-3">
+                          {objectiveKeyResults.map((kr) => {
+                            const krTeams = kr.teamIds.map(id => getTeamById(id)).filter(Boolean);
+                            const krSkills = kr.skills.map(id => getSkillById(id)).filter(Boolean);
+
+                            return (
+                              <div key={kr.id} className="p-4 bg-muted/30 rounded-lg border border-border">
+                                <div className="flex items-start justify-between gap-3 mb-2">
+                                  <p className="text-sm font-medium flex-1">
+                                    {language === 'es' ? kr.titleEs : kr.title}
+                                  </p>
+                                  <StatusBadge status={kr.status} size="sm" />
+                                </div>
+                                
+                                <p className="text-xs text-muted-foreground mb-3">
+                                  {language === 'es' ? kr.descriptionEs : kr.description}
+                                </p>
+                                
+                                <ProgressBar value={kr.progress} size="sm" showLabel />
+
+                                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                                  <span className="flex items-center gap-1">
+                                    <DollarSign className="h-3 w-3" />
+                                    ${kr.investment.toLocaleString()}
+                                  </span>
+                                  <div className="flex items-center gap-1">
+                                    <Users className="h-3 w-3" />
+                                    {krTeams.map((team, i) => (
+                                      <span key={team!.id}>
+                                        {language === 'es' ? team!.nameEs : team!.name}
+                                        {i < krTeams.length - 1 && ', '}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Skills for this Key Result */}
+                                {krSkills.length > 0 && (
+                                  <div className="mt-3 pt-3 border-t border-border">
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                                      <Sparkles className="h-3 w-3" />
+                                      {language === 'es' ? 'Habilidades' : 'Skills'}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                      {krSkills.map(skill => skill && (
+                                        <div key={skill.id} className="flex items-center gap-2 px-2 py-1 bg-background rounded">
+                                          <span className="text-xs">{language === 'es' ? skill.nameEs : skill.name}</span>
+                                          <SkillIndicator value={skill.initialValue} size="sm" />
+                                          <ArrowRight className="h-2 w-2" />
+                                          <SkillIndicator value={skill.currentValue} size="sm" />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
 

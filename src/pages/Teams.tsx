@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { teams, objectives, skills } from '@/data/demoData';
+import { teams, keyResults, skills, objectives, dynamics, getKeyResultsForTeam, getSkillsForTeam, getUnitsForTeam, getObjectiveById, getDynamicById } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -11,28 +12,33 @@ import {
   Sparkles, 
   TrendingUp, 
   DollarSign,
-  ChevronRight
+  ChevronRight,
+  Building2,
+  Layers,
+  User,
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import type { Team } from '@/data/demoData';
 
 export default function Teams() {
   const { t, language } = useLanguage();
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
-  const getTeamObjectives = (teamId: string) => 
-    objectives.filter(obj => obj.teamId === teamId);
+  const getTeamKeyResults = (teamId: string) => getKeyResultsForTeam(teamId);
   
-  const getTeamSkills = (skillIds: string[]) => 
-    skills.filter(s => skillIds.includes(s.id));
+  const getTeamSkills = (teamId: string) => getSkillsForTeam(teamId);
 
   const getTeamInvestment = (teamId: string) => 
-    getTeamObjectives(teamId).reduce((sum, obj) => sum + obj.investment, 0);
+    getTeamKeyResults(teamId).reduce((sum, kr) => sum + kr.investment, 0);
 
   const getTeamProgress = (teamId: string) => {
-    const teamObjs = getTeamObjectives(teamId);
-    if (teamObjs.length === 0) return 0;
-    return Math.round(teamObjs.reduce((sum, obj) => sum + obj.progress, 0) / teamObjs.length);
+    const teamKRs = getTeamKeyResults(teamId);
+    if (teamKRs.length === 0) return 0;
+    return Math.round(teamKRs.reduce((sum, kr) => sum + kr.progress, 0) / teamKRs.length);
   };
 
   const getAlignmentColor = (alignment: number) => {
@@ -69,29 +75,26 @@ export default function Teams() {
         </h1>
         <p className="text-muted-foreground mt-1">
           {language === 'es' 
-            ? 'Vista general de equipos, objetivos y habilidades' 
-            : 'Overview of teams, objectives, and skills'}
+            ? 'Vista general de equipos, resultados clave y habilidades' 
+            : 'Overview of teams, key results, and skills'}
         </p>
       </motion.div>
 
       {/* Team Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {teams.map((team) => {
-          const teamObjectives = getTeamObjectives(team.id);
-          const teamSkills = getTeamSkills(team.skillIds);
+          const teamKeyResults = getTeamKeyResults(team.id);
+          const teamSkills = getTeamSkills(team.id);
           const teamInvestment = getTeamInvestment(team.id);
           const teamProgress = getTeamProgress(team.id);
-          const isSelected = selectedTeam === team.id;
           const alignmentColor = getAlignmentColor(team.alignment);
+          const teamUnits = getUnitsForTeam(team.id);
 
           return (
             <motion.div key={team.id} variants={itemVariants}>
               <Card 
-                className={cn(
-                  "shadow-sm cursor-pointer transition-all overflow-hidden",
-                  isSelected && "ring-2 ring-primary"
-                )}
-                onClick={() => setSelectedTeam(isSelected ? null : team.id)}
+                className="shadow-sm cursor-pointer transition-all overflow-hidden hover:shadow-md"
+                onClick={() => setSelectedTeam(team)}
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -101,15 +104,25 @@ export default function Teams() {
                       </div>
                       <div>
                         <span className="block">{language === 'es' ? team.nameEs : team.name}</span>
-                        <span className="text-sm text-muted-foreground font-normal">
-                          {team.members} {language === 'es' ? 'miembros' : 'members'}
-                        </span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-sm text-muted-foreground font-normal">
+                            {team.members.length} {language === 'es' ? 'miembros' : 'members'}
+                          </span>
+                          <span className={cn(
+                            "text-xs px-2 py-0.5 rounded-full font-medium",
+                            team.unitType === 'core' 
+                              ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
+                              : "bg-muted text-muted-foreground"
+                          )}>
+                            {team.unitType === 'core' 
+                              ? (language === 'es' ? 'Unidad Core' : 'Core Unit')
+                              : (language === 'es' ? 'Unidad Extendida' : 'Extended Unit')
+                            }
+                          </span>
+                        </div>
                       </div>
                     </CardTitle>
-                    <ChevronRight className={cn(
-                      "h-5 w-5 text-muted-foreground transition-transform",
-                      isSelected && "rotate-90"
-                    )} />
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -118,9 +131,11 @@ export default function Teams() {
                     <div className="p-3 bg-muted/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-1">
                         <Target className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">{t('teams.objectives')}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {language === 'es' ? 'Resultados Clave' : 'Key Results'}
+                        </span>
                       </div>
-                      <p className="text-lg font-bold">{teamObjectives.length}</p>
+                      <p className="text-lg font-bold">{teamKeyResults.length}</p>
                     </div>
                     <div className="p-3 bg-muted/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-1">
@@ -163,51 +178,18 @@ export default function Teams() {
                     <ProgressBar value={teamProgress} color="business-cyan" showLabel={false} />
                   </div>
 
-                  {/* Expanded Content */}
-                  {isSelected && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="pt-4 border-t border-border space-y-4"
-                    >
-                      {/* Objectives */}
-                      <div>
-                        <h4 className="text-sm font-semibold mb-3">
-                          {language === 'es' ? 'Objetivos del Equipo' : 'Team Objectives'}
-                        </h4>
-                        <div className="space-y-2">
-                          {teamObjectives.map(obj => (
-                            <div key={obj.id} className="p-3 bg-muted/30 rounded-lg">
-                              <div className="flex items-center justify-between gap-3 mb-2">
-                                <p className="text-sm font-medium truncate flex-1">
-                                  {language === 'es' ? obj.titleEs : obj.title}
-                                </p>
-                                <StatusBadge status={obj.status} size="sm" />
-                              </div>
-                              <ProgressBar value={obj.progress} size="sm" showLabel={false} />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Skills */}
-                      <div>
-                        <h4 className="text-sm font-semibold mb-3">
-                          {language === 'es' ? 'Habilidades del Equipo' : 'Team Skills'}
-                        </h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          {teamSkills.map(skill => (
-                            <div key={skill.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
-                              <span className="text-sm truncate">
-                                {language === 'es' ? skill.nameEs : skill.name}
-                              </span>
-                              <SkillIndicator value={skill.currentValue} size="sm" />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
+                  {/* Units Badge */}
+                  {teamUnits.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+                      {teamUnits.map(unit => unit && (
+                        <span 
+                          key={unit.id}
+                          className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground"
+                        >
+                          {language === 'es' ? unit.nameEs : unit.name}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -231,7 +213,7 @@ export default function Teams() {
                 <p className="text-sm text-muted-foreground">
                   {language === 'es' ? 'Total de Miembros' : 'Total Members'}
                 </p>
-                <p className="text-3xl font-bold">{teams.reduce((sum, t) => sum + t.members, 0)}</p>
+                <p className="text-3xl font-bold">{teams.reduce((sum, t) => sum + t.members.length, 0)}</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
@@ -245,6 +227,182 @@ export default function Teams() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Team Detail Dialog */}
+      <Dialog open={!!selectedTeam} onOpenChange={() => setSelectedTeam(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedTeam && (
+            <TeamDetailContent team={selectedTeam} language={language} />
+          )}
+        </DialogContent>
+      </Dialog>
     </motion.div>
+  );
+}
+
+function TeamDetailContent({ team, language }: { team: Team; language: 'en' | 'es' }) {
+  const teamKeyResults = getKeyResultsForTeam(team.id);
+  const teamSkills = getSkillsForTeam(team.id);
+  const teamUnits = getUnitsForTeam(team.id);
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-3 text-xl">
+          <div className="p-2 bg-business-cyan/10 rounded-lg">
+            <Users className="h-6 w-6 text-business-cyan" />
+          </div>
+          <div>
+            <span>{language === 'es' ? team.nameEs : team.name}</span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className={cn(
+                "text-sm px-2 py-0.5 rounded-full font-medium",
+                team.unitType === 'core' 
+                  ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
+                  : "bg-muted text-muted-foreground"
+              )}>
+                {team.unitType === 'core' 
+                  ? (language === 'es' ? 'Unidad Core' : 'Core Unit')
+                  : (language === 'es' ? 'Unidad Extendida' : 'Extended Unit')
+                }
+              </span>
+            </div>
+          </div>
+        </DialogTitle>
+      </DialogHeader>
+
+      <div className="space-y-6 mt-4">
+        {/* Strategic Units */}
+        {teamUnits.length > 0 && (
+          <div>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+              {language === 'es' ? 'Pertenece a' : 'Belongs to'}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {teamUnits.map(unit => unit && (
+                <div key={unit.id} className="px-3 py-2 bg-muted/50 rounded-lg">
+                  <p className="font-medium text-sm">{language === 'es' ? unit.nameEs : unit.name}</p>
+                  <p className="text-xs text-muted-foreground">{language === 'es' ? unit.descriptionEs : unit.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Key Results with Traceability */}
+        <div>
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <Target className="h-4 w-4 text-muted-foreground" />
+            {language === 'es' ? 'Resultados Clave del Equipo' : 'Team Key Results'}
+          </h3>
+          <div className="space-y-3">
+            {teamKeyResults.map(kr => {
+              const objective = getObjectiveById(kr.objectiveId);
+              const dynamic = objective ? getDynamicById(objective.dynamicId) : null;
+              
+              return (
+                <div key={kr.id} className="p-4 bg-muted/30 rounded-lg border border-border">
+                  {/* Traceability Path */}
+                  <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
+                    {dynamic && (
+                      <>
+                        <span className={cn(
+                          "px-2 py-0.5 rounded font-medium",
+                          `bg-${dynamic.color}/10 text-${dynamic.color}`
+                        )}>
+                          {language === 'es' ? dynamic.nameEs : dynamic.name}
+                        </span>
+                        <ArrowRight className="h-3 w-3" />
+                      </>
+                    )}
+                    {objective && (
+                      <span className="truncate max-w-[200px]">
+                        {language === 'es' ? objective.titleEs : objective.title}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <p className="text-sm font-medium">
+                      {language === 'es' ? kr.titleEs : kr.title}
+                    </p>
+                    <StatusBadge status={kr.status} size="sm" />
+                  </div>
+                  <ProgressBar value={kr.progress} size="sm" showLabel />
+                  
+                  {/* Contributing Teams */}
+                  {kr.teamIds.length > 1 && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {language === 'es' ? 'Equipos contribuyentes:' : 'Contributing teams:'}
+                      </span>
+                      <div className="flex gap-1">
+                        {kr.teamIds.map(tid => {
+                          const t = teams.find(x => x.id === tid);
+                          return t && (
+                            <span key={tid} className={cn(
+                              "text-xs px-2 py-0.5 rounded-full",
+                              tid === team.id ? "bg-business-cyan/10 text-business-cyan" : "bg-muted text-muted-foreground"
+                            )}>
+                              {language === 'es' ? t.nameEs : t.name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div>
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+            {language === 'es' ? 'Habilidades del Equipo' : 'Team Skills'}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {teamSkills.map(skill => (
+              <div key={skill.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                <span className="text-sm truncate">
+                  {language === 'es' ? skill.nameEs : skill.name}
+                </span>
+                <div className="flex items-center gap-2">
+                  <SkillIndicator value={skill.initialValue} size="sm" />
+                  <ArrowRight className="h-3 w-3 text-muted-foreground" />
+                  <SkillIndicator value={skill.currentValue} size="sm" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Team Members */}
+        <div>
+          <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+            <User className="h-4 w-4 text-muted-foreground" />
+            {language === 'es' ? 'Integrantes' : 'Team Members'} ({team.members.length})
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[300px] overflow-y-auto">
+            {team.members.map(member => (
+              <div key={member.id} className="flex items-center gap-3 p-2 bg-muted/30 rounded-lg">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
+                  {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{member.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {language === 'es' ? member.roleEs : member.role}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
