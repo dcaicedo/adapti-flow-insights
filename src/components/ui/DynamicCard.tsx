@@ -17,16 +17,16 @@ export function DynamicCard({ dynamic, onClick }: DynamicCardProps) {
   const colorBorders: Record<string, string> = {
     'adaptativa-blue': 'border-l-adaptativa-blue',
     'culture-yellow': 'border-l-culture-yellow',
-    'business-cyan': 'border-l-business-cyan',
-    'structure-neutral': 'border-l-structure-neutral',
+    'business-blue': 'border-l-business-blue',
+    'structure-magenta': 'border-l-structure-magenta',
     'entrepreneurship-green': 'border-l-entrepreneurship-green',
   };
 
   const colorBgs: Record<string, string> = {
     'adaptativa-blue': 'bg-adaptativa-blue/10',
     'culture-yellow': 'bg-culture-yellow/10',
-    'business-cyan': 'bg-business-cyan/10',
-    'structure-neutral': 'bg-structure-neutral/10',
+    'business-blue': 'bg-business-blue/10',
+    'structure-magenta': 'bg-structure-magenta/10',
     'entrepreneurship-green': 'bg-entrepreneurship-green/10',
   };
 
