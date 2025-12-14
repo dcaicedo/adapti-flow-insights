@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useSearchParams } from 'react-router-dom';
 import { teams, keyResults, skills, objectives, dynamics, getKeyResultsForTeam, getSkillsForTeam, getUnitsForTeam, getObjectiveById, getDynamicById } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -26,7 +27,19 @@ import type { Team } from '@/data/demoData';
 
 export default function Teams() {
   const { t, language } = useLanguage();
+  const [searchParams] = useSearchParams();
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+
+  // Auto-open team detail if highlighted via URL param
+  useEffect(() => {
+    const highlightId = searchParams.get('highlight');
+    if (highlightId) {
+      const team = teams.find(t => t.id === highlightId);
+      if (team) {
+        setSelectedTeam(team);
+      }
+    }
+  }, [searchParams]);
 
   const getTeamKeyResults = (teamId: string) => getKeyResultsForTeam(teamId);
   
@@ -386,17 +399,47 @@ function TeamDetailContent({ team, language }: { team: Team; language: 'en' | 'e
             <User className="h-4 w-4 text-muted-foreground" />
             {language === 'es' ? 'Integrantes' : 'Team Members'} ({team.members.length})
           </h3>
+          
+          {/* Member counts by unit type */}
+          <div className="flex gap-4 mb-3 text-sm">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-adaptativa-blue" />
+              <span className="text-muted-foreground">Core:</span>
+              <span className="font-medium">{team.members.filter(m => m.unitType === 'core').length}</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-muted-foreground" />
+              <span className="text-muted-foreground">{language === 'es' ? 'Extendida' : 'Extended'}:</span>
+              <span className="font-medium">{team.members.filter(m => m.unitType === 'extended').length}</span>
+            </span>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[300px] overflow-y-auto">
             {team.members.map(member => (
               <div key={member.id} className="flex items-center gap-3 p-2 bg-muted/30 rounded-lg">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
+                <div className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
+                  member.unitType === 'core' 
+                    ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
+                    : "bg-muted text-muted-foreground"
+                )}>
                   {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium truncate">{member.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {language === 'es' ? member.roleEs : member.role}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-muted-foreground truncate">
+                      {language === 'es' ? member.roleEs : member.role}
+                    </p>
+                    <span className={cn(
+                      "text-[10px] px-1.5 py-0.5 rounded-full shrink-0",
+                      member.unitType === 'core' 
+                        ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
+                        : "bg-muted text-muted-foreground"
+                    )}>
+                      {member.unitType === 'core' ? 'Core' : (language === 'es' ? 'Ext' : 'Ext')}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
