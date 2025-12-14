@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, DollarSign, Users, Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
+import { ChevronDown, DollarSign, Users, Sparkles, ArrowRight, ExternalLink, Wallet, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProgressBar } from './ProgressBar';
 import { StatusBadge } from './StatusBadge';
 import { SkillIndicator } from './SkillIndicator';
 import { DynamicBadge } from './DynamicBadge';
+import { Button } from './button';
 import type { KeyResult, Dynamic, Team, Skill } from '@/data/demoData';
 
 interface KRCardProps {
@@ -35,6 +36,11 @@ export function KRCard({
 }: KRCardProps) {
   const validTeams = teams.filter(Boolean) as Team[];
   const validSkills = skills.filter(Boolean) as Skill[];
+  
+  const budgetUsed = keyResult.investment;
+  const totalBudget = keyResult.budget;
+  const budgetRemaining = totalBudget - budgetUsed;
+  const budgetUsedPercent = Math.round((budgetUsed / totalBudget) * 100);
 
   return (
     <div 
@@ -99,33 +105,81 @@ export function KRCard({
                 {language === 'es' ? keyResult.descriptionEs : keyResult.description}
               </p>
 
-              {/* Stats */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <DollarSign className="h-4 w-4" />
-                  ${keyResult.investment.toLocaleString()}
-                </span>
-                {validTeams.length > 0 && (
-                  <div className="flex items-center gap-1.5">
-                    <Users className="h-4 w-4" />
-                    {validTeams.map((team, i) => (
-                      <button
+              {/* Budget Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-background rounded-lg border border-border">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-primary/10">
+                    <Wallet className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {language === 'es' ? 'Presupuesto Total' : 'Total Budget'}
+                    </p>
+                    <p className="text-sm font-semibold">${totalBudget.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-destructive/10">
+                    <TrendingUp className="h-4 w-4 text-destructive" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {language === 'es' ? 'Utilizado' : 'Used'} ({budgetUsedPercent}%)
+                    </p>
+                    <p className="text-sm font-semibold">${budgetUsed.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    "p-2 rounded-full",
+                    budgetRemaining > 0 ? "bg-green-500/10" : "bg-destructive/10"
+                  )}>
+                    <DollarSign className={cn(
+                      "h-4 w-4",
+                      budgetRemaining > 0 ? "text-green-500" : "text-destructive"
+                    )} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">
+                      {language === 'es' ? 'Pendiente' : 'Remaining'}
+                    </p>
+                    <p className={cn(
+                      "text-sm font-semibold",
+                      budgetRemaining > 0 ? "text-green-600" : "text-destructive"
+                    )}>
+                      ${budgetRemaining.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Teams Section */}
+              {validTeams.length > 0 && (
+                <div className="pt-3 border-t border-border">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                    <Users className="h-3 w-3" />
+                    {language === 'es' ? 'Equipos Responsables' : 'Responsible Teams'}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {validTeams.map((team) => (
+                      <Button
                         key={team.id}
+                        variant="outline"
+                        size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
                           onTeamClick?.(team.id);
                         }}
-                        className="hover:text-primary hover:underline transition-colors inline-flex items-center gap-0.5"
+                        className="h-8 gap-1.5 hover:bg-primary/10 hover:border-primary"
                       >
-                        <span>{team.icon}</span>
-                        {language === 'es' ? team.nameEs : team.name}
-                        <ExternalLink className="h-3 w-3" />
-                        {i < validTeams.length - 1 && <span>,</span>}
-                      </button>
+                        <span className="text-base">{team.icon}</span>
+                        <span>{language === 'es' ? team.nameEs : team.name}</span>
+                        <ExternalLink className="h-3 w-3 ml-1" />
+                      </Button>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Skills */}
               {validSkills.length > 0 && (
