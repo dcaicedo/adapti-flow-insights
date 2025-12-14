@@ -1,9 +1,10 @@
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from './ProgressBar';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Dynamic } from '@/data/demoData';
-import { ChevronRight } from 'lucide-react';
+import { getDynamicColorClasses } from '@/utils/dynamicColors';
+import type { Dynamic } from '@/data/demoData';
+import { cn } from '@/lib/utils';
+import { Target, DollarSign } from 'lucide-react';
 
 interface DynamicCardProps {
   dynamic: Dynamic;
@@ -11,66 +12,35 @@ interface DynamicCardProps {
 }
 
 export function DynamicCard({ dynamic, onClick }: DynamicCardProps) {
-  const { language, t } = useLanguage();
-  const name = language === 'es' ? dynamic.nameEs : dynamic.name;
-
-  const colorBorders: Record<string, string> = {
-    'adaptativa-blue': 'border-l-adaptativa-blue',
-    'culture-yellow': 'border-l-culture-yellow',
-    'business-blue': 'border-l-business-blue',
-    'structure-magenta': 'border-l-structure-magenta',
-    'entrepreneurship-green': 'border-l-entrepreneurship-green',
-  };
-
-  const colorBgs: Record<string, string> = {
-    'adaptativa-blue': 'bg-adaptativa-blue/10',
-    'culture-yellow': 'bg-culture-yellow/10',
-    'business-blue': 'bg-business-blue/10',
-    'structure-magenta': 'bg-structure-magenta/10',
-    'entrepreneurship-green': 'bg-entrepreneurship-green/10',
-  };
+  const colors = getDynamicColorClasses(dynamic.color);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className="cursor-pointer"
       onClick={onClick}
-      className={cn(
-        "bg-card rounded-lg p-5 shadow-sm border border-border cursor-pointer transition-all",
-        "border-l-4",
-        colorBorders[dynamic.color]
-      )}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <div className={cn(
-            "inline-flex px-2 py-1 rounded text-xs font-medium mb-2",
-            colorBgs[dynamic.color]
-          )}>
-            {name}
+      <Card className={cn("shadow-sm overflow-hidden transition-all hover:shadow-md")}>
+        <div className={cn("h-1.5", colors.bg)} />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <span className="text-xl">{dynamic.icon}</span>
+            <span className={colors.text}>{dynamic.name}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Target className="h-3 w-3" /> {dynamic.objectiveIds.length} obj
+            </span>
+            <span className="text-muted-foreground flex items-center gap-1">
+              <DollarSign className="h-3 w-3" /> ${(dynamic.investment / 1000).toFixed(0)}K
+            </span>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {dynamic.objectiveIds?.length || 0} {t('dynamics.objectives')}
-          </p>
-        </div>
-        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <div className="flex justify-between text-sm mb-1">
-            <span className="text-muted-foreground">{t('dynamics.progress')}</span>
-            <span className="font-medium">{dynamic.progress}%</span>
-          </div>
-          <ProgressBar value={dynamic.progress} color={dynamic.color} showLabel={false} />
-        </div>
-
-        <div className="flex justify-between text-sm pt-2 border-t border-border">
-          <span className="text-muted-foreground">{t('dynamics.investment')}</span>
-          <span className="font-semibold">${dynamic.investment.toLocaleString()}</span>
-        </div>
-      </div>
+          <ProgressBar value={dynamic.progress} color={dynamic.color} size="sm" />
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
