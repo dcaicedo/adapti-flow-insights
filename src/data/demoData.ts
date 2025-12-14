@@ -106,6 +106,7 @@ export interface OrganizationInfo {
   tagline: string;
   taglineEs: string;
   logo: string;
+  currentPeriod: string;
 }
 
 // ============= Organization Info =============
@@ -115,6 +116,7 @@ export const organizationInfo: OrganizationInfo = {
   tagline: 'Transforming Organizations Through Adaptive Excellence',
   taglineEs: 'Transformando Organizaciones a Través de la Excelencia Adaptativa',
   logo: '/adaptativa-logo.svg',
+  currentPeriod: '2025-Q3',
 };
 
 // ============= Demo Data =============
@@ -446,10 +448,10 @@ export const keyResults: KeyResult[] = [
   // Structure Objective Key Results
   {
     id: 'kr-10',
-    title: 'Redesign organizational structure to squad-based model',
-    titleEs: 'Rediseñar estructura organizacional a modelo basado en squads',
-    description: 'Specific: Move to squad-based model. Measurable: 50% faster decision-making. Achievable: Pilot with 2 departments. Relevant: Enables adaptation. Time-bound: Full transition by Q4.',
-    descriptionEs: 'Específico: Migrar a modelo basado en squads. Medible: 50% más rápido en toma de decisiones. Alcanzable: Piloto con 2 departamentos. Relevante: Habilita adaptación. Temporal: Transición completa para Q4.',
+    title: 'Redesign organizational structure to Adaptive Team model',
+    titleEs: 'Rediseñar estructura organizacional a modelo de Adaptive Teams',
+    description: 'Specific: Move to Adaptive Team model. Measurable: 50% faster decision-making. Achievable: Pilot with 2 departments. Relevant: Enables adaptation. Time-bound: Full transition by Q4.',
+    descriptionEs: 'Específico: Migrar a modelo de Adaptive Teams. Medible: 50% más rápido en toma de decisiones. Alcanzable: Piloto con 2 departamentos. Relevante: Habilita adaptación. Temporal: Transición completa para Q4.',
     objectiveId: 'obj-7',
     teamIds: ['team-1'],
     progress: 45,
