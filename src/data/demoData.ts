@@ -9,7 +9,8 @@ export interface KeyResult {
   objectiveId: string; // Parent objective
   teamIds: string[]; // Teams contributing to this key result
   progress: number;
-  investment: number;
+  investment: number; // Budget used
+  budget: number; // Total assigned budget
   status: 'on-track' | 'attention' | 'critical';
   skills: string[];
 }
@@ -336,6 +337,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-1'],
     progress: 85,
     investment: 80000,
+    budget: 95000,
     status: 'on-track',
     skills: ['skill-1', 'skill-2'],
   },
@@ -349,6 +351,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-1', 'team-2'],
     progress: 90,
     investment: 40000,
+    budget: 45000,
     status: 'on-track',
     skills: ['skill-2'],
   },
@@ -363,6 +366,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-2'],
     progress: 72,
     investment: 25000,
+    budget: 35000,
     status: 'on-track',
     skills: ['skill-3', 'skill-4'],
   },
@@ -376,6 +380,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-2', 'team-4'],
     progress: 68,
     investment: 20000,
+    budget: 30000,
     status: 'on-track',
     skills: ['skill-3'],
   },
@@ -389,6 +394,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-2'],
     progress: 65,
     investment: 40000,
+    budget: 50000,
     status: 'attention',
     skills: ['skill-3'],
   },
@@ -403,6 +409,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-3'],
     progress: 68,
     investment: 100000,
+    budget: 120000,
     status: 'on-track',
     skills: ['skill-5', 'skill-6'],
   },
@@ -416,6 +423,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-3', 'team-5'],
     progress: 55,
     investment: 50000,
+    budget: 70000,
     status: 'attention',
     skills: ['skill-5'],
   },
@@ -429,6 +437,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-3'],
     progress: 55,
     investment: 60000,
+    budget: 75000,
     status: 'attention',
     skills: ['skill-6', 'skill-7'],
   },
@@ -442,6 +451,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-4'],
     progress: 42,
     investment: 40000,
+    budget: 60000,
     status: 'critical',
     skills: ['skill-8'],
   },
@@ -456,6 +466,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-1'],
     progress: 45,
     investment: 40000,
+    budget: 55000,
     status: 'attention',
     skills: ['skill-9', 'skill-10'],
   },
@@ -469,6 +480,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-1', 'team-2'],
     progress: 50,
     investment: 20000,
+    budget: 30000,
     status: 'attention',
     skills: ['skill-10'],
   },
@@ -483,6 +495,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-5'],
     progress: 80,
     investment: 60000,
+    budget: 70000,
     status: 'on-track',
     skills: ['skill-11'],
   },
@@ -496,6 +509,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-5', 'team-3'],
     progress: 75,
     investment: 40000,
+    budget: 55000,
     status: 'on-track',
     skills: ['skill-12'],
   },
@@ -509,6 +523,7 @@ export const keyResults: KeyResult[] = [
     teamIds: ['team-5', 'team-1'],
     progress: 82,
     investment: 80000,
+    budget: 100000,
     status: 'on-track',
     skills: ['skill-11'],
   },
