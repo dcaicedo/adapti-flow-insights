@@ -3,7 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { DynamicCard } from '@/components/ui/DynamicCard';
 import { AlertCard } from '@/components/ui/AlertCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { dynamics, objectives, skills, alerts, purpose } from '@/data/demoData';
+import { dynamics, objectives, skills, alerts, purpose, teams, keyResults, getKeyResultsForTeam } from '@/data/demoData';
 import { 
   TrendingUp, 
   Target, 
@@ -12,7 +12,9 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowUpRight,
-  Sparkles
+  Sparkles,
+  Users,
+  ChevronRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
@@ -231,6 +233,66 @@ export default function Dashboard() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Teams Quick Access */}
+      <motion.div variants={itemVariants}>
+        <Card className="shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <Users className="h-5 w-5 text-business-cyan" />
+              {t('teams.title')}
+            </CardTitle>
+            <button 
+              onClick={() => navigate('/teams')}
+              className="text-sm text-primary hover:underline"
+            >
+              {language === 'es' ? 'Ver todos' : 'View all'}
+            </button>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {teams.slice(0, 3).map((team) => {
+                const teamKRs = getKeyResultsForTeam(team.id);
+                const avgProgress = teamKRs.length > 0 
+                  ? Math.round(teamKRs.reduce((sum, kr) => sum + kr.progress, 0) / teamKRs.length)
+                  : 0;
+                
+                return (
+                  <div 
+                    key={team.id}
+                    onClick={() => navigate('/teams')}
+                    className="p-4 bg-muted/30 rounded-lg border border-border cursor-pointer hover:shadow-md transition-all group"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-business-cyan/10 rounded-lg">
+                          <Users className="h-4 w-4 text-business-cyan" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{language === 'es' ? team.nameEs : team.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {team.members.length} {language === 'es' ? 'miembros' : 'members'}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          {teamKRs.length} {language === 'es' ? 'Resultados Clave' : 'Key Results'}
+                        </span>
+                        <span className="font-medium">{avgProgress}%</span>
+                      </div>
+                      <ProgressBar value={avgProgress} color="business-cyan" size="sm" showLabel={false} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </motion.div>
   );
 }
