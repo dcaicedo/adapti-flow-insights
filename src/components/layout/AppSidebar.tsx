@@ -21,17 +21,18 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { organizationInfo } from '@/data/demoData';
 
 const navItems = [
-  { path: '/', icon: LayoutDashboard, labelKey: 'nav.dashboard' },
-  { path: '/purpose', icon: Target, labelKey: 'nav.purpose' },
-  { path: '/dynamics', icon: Sparkles, labelKey: 'nav.dynamics' },
-  { path: '/objectives', icon: Trophy, labelKey: 'nav.objectives' },
-  { path: '/teams', icon: Users, labelKey: 'nav.teams' },
-  { path: '/structure', icon: Network, labelKey: 'nav.structure' },
-  { path: '/reports', icon: BarChart3, labelKey: 'nav.reports' },
-  { path: '/admin', icon: Shield, labelKey: 'nav.admin' },
-  { path: '/settings', icon: Settings, labelKey: 'nav.settings' },
+  { path: '/', icon: LayoutDashboard, labelKey: 'nav.dashboard', emoji: '📊' },
+  { path: '/purpose', icon: Target, labelKey: 'nav.purpose', emoji: '🎯' },
+  { path: '/dynamics', icon: Sparkles, labelKey: 'nav.dynamics', emoji: '✨' },
+  { path: '/objectives', icon: Trophy, labelKey: 'nav.objectives', emoji: '🏆' },
+  { path: '/teams', icon: Users, labelKey: 'nav.teams', emoji: '👥' },
+  { path: '/structure', icon: Network, labelKey: 'nav.structure', emoji: '🏗️' },
+  { path: '/reports', icon: BarChart3, labelKey: 'nav.reports', emoji: '📈' },
+  { path: '/admin', icon: Shield, labelKey: 'nav.admin', emoji: '⚙️' },
+  { path: '/settings', icon: Settings, labelKey: 'nav.settings', emoji: '🔧' },
 ];
 
 export function AppSidebar() {
@@ -56,15 +57,22 @@ export function AppSidebar() {
             exit={{ opacity: 0 }}
             className="flex items-center gap-3"
           >
-            <div className="w-8 h-8 rounded-lg bg-adaptativa-blue flex items-center justify-center">
-              <span className="text-sm font-bold text-sidebar-primary-foreground">A</span>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-adaptativa-blue to-adaptativa-blue-light flex items-center justify-center shadow-lg">
+              <span className="text-lg font-bold text-sidebar-primary-foreground">A</span>
             </div>
-            <span className="text-lg font-semibold text-sidebar-foreground">Adaptativa</span>
+            <div className="flex flex-col">
+              <span className="text-base font-bold text-sidebar-foreground leading-tight">
+                {organizationInfo.name.split(' ')[0]}
+              </span>
+              <span className="text-xs text-sidebar-foreground/60">
+                {organizationInfo.name.split(' ')[1]}
+              </span>
+            </div>
           </motion.div>
         )}
         {collapsed && (
-          <div className="w-8 h-8 rounded-lg bg-adaptativa-blue flex items-center justify-center mx-auto">
-            <span className="text-sm font-bold text-sidebar-primary-foreground">A</span>
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-adaptativa-blue to-adaptativa-blue-light flex items-center justify-center mx-auto shadow-lg">
+            <span className="text-lg font-bold text-sidebar-primary-foreground">A</span>
           </div>
         )}
         <Button
@@ -95,7 +103,7 @@ export function AppSidebar() {
                     isActive && "bg-sidebar-accent text-sidebar-primary font-medium"
                   )}
                 >
-                  <item.icon className={cn("h-5 w-5 flex-shrink-0", isActive && "text-sidebar-primary")} />
+                  <span className="text-lg flex-shrink-0">{item.emoji}</span>
                   {!collapsed && (
                     <motion.span
                       initial={{ opacity: 0 }}
@@ -125,9 +133,9 @@ export function AppSidebar() {
           )}
         >
           {theme === 'light' ? (
-            <Moon className="h-4 w-4" />
+            <span className="text-lg">🌙</span>
           ) : (
-            <Sun className="h-4 w-4" />
+            <span className="text-lg">☀️</span>
           )}
           {!collapsed && <span className="ml-3 text-sm">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>}
         </Button>
@@ -142,7 +150,7 @@ export function AppSidebar() {
             collapsed && "justify-center"
           )}
         >
-          <Languages className="h-4 w-4" />
+          <span className="text-lg">{language === 'en' ? '🇪🇸' : '🇺🇸'}</span>
           {!collapsed && <span className="ml-3 text-sm">{language === 'en' ? 'Español' : 'English'}</span>}
         </Button>
 

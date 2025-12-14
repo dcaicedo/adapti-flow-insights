@@ -120,8 +120,8 @@ export default function Dashboard() {
                 <p className="text-sm text-muted-foreground">{t('dashboard.investmentLevel')}</p>
                 <p className="text-2xl font-bold mt-1">${(totalInvestment / 1000).toFixed(0)}K</p>
               </div>
-              <div className="p-3 bg-business-cyan/10 rounded-xl">
-                <DollarSign className="h-6 w-6 text-business-cyan" />
+              <div className="p-3 bg-business-blue/10 rounded-xl">
+                <DollarSign className="h-6 w-6 text-business-blue" />
               </div>
             </div>
             <div className="flex items-center gap-1 mt-4 text-sm text-status-success">
@@ -239,7 +239,7 @@ export default function Dashboard() {
         <Card className="shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Users className="h-5 w-5 text-business-cyan" />
+              <span className="text-xl">👥</span>
               {t('teams.title')}
             </CardTitle>
             <button 
@@ -265,8 +265,8 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-business-cyan/10 rounded-lg">
-                          <Users className="h-4 w-4 text-business-cyan" />
+                        <div className="p-2 bg-business-blue/10 rounded-lg">
+                          <span className="text-lg">👥</span>
                         </div>
                         <div>
                           <p className="font-medium">{language === 'es' ? team.nameEs : team.name}</p>
@@ -284,7 +284,7 @@ export default function Dashboard() {
                         </span>
                         <span className="font-medium">{avgProgress}%</span>
                       </div>
-                      <ProgressBar value={avgProgress} color="business-cyan" size="sm" showLabel={false} />
+                      <ProgressBar value={avgProgress} color="business-blue" size="sm" showLabel={false} />
                     </div>
                   </div>
                 );
