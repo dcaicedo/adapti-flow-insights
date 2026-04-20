@@ -35,6 +35,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { LineChart, Line, ResponsiveContainer, Tooltip as RechartsTooltip, Area, AreaChart } from 'recharts';
 import type { Team, KeyResult, TeamMetrics } from '@/data/demoData';
 
 export default function Teams() {
