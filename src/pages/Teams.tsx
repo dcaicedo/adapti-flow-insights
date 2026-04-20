@@ -378,6 +378,9 @@ function TeamDetailContent({ team, language, navigate, highlightedKRId }: TeamDe
           </div>
         )}
 
+        {/* Performance Metrics */}
+        <TeamMetricsPanel metrics={team.metrics} language={language} />
+
         {/* Key Results with collapsible and inherited colors */}
         <div>
           <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
