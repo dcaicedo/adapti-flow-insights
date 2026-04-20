@@ -14,7 +14,9 @@ import {
   Users, 
   Target, 
   Sparkles, 
-  TrendingUp, 
+  TrendingUp,
+  TrendingDown,
+  Minus,
   DollarSign,
   ChevronRight,
   ChevronDown,
@@ -23,12 +25,17 @@ import {
   ArrowRight,
   Calendar,
   ExternalLink,
-  Search
+  Search,
+  Clock,
+  Zap,
+  BarChart3,
+  Gauge,
+  Smile
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import type { Team, KeyResult } from '@/data/demoData';
+import type { Team, KeyResult, TeamMetrics } from '@/data/demoData';
 
 export default function Teams() {
   const { t, language } = useLanguage();
