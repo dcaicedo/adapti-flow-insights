@@ -14,7 +14,9 @@ import {
   Users, 
   Target, 
   Sparkles, 
-  TrendingUp, 
+  TrendingUp,
+  TrendingDown,
+  Minus,
   DollarSign,
   ChevronRight,
   ChevronDown,
@@ -23,12 +25,17 @@ import {
   ArrowRight,
   Calendar,
   ExternalLink,
-  Search
+  Search,
+  Clock,
+  Zap,
+  BarChart3,
+  Gauge,
+  Smile
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import type { Team, KeyResult } from '@/data/demoData';
+import type { Team, KeyResult, TeamMetrics } from '@/data/demoData';
 
 export default function Teams() {
   const { t, language } = useLanguage();
@@ -214,21 +221,26 @@ export default function Teams() {
                 
                 <CardContent className="space-y-4">
                   {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <Target className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">{teamKeyResults.length}</p>
-                      <p className="text-xs text-muted-foreground">KRs</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <Target className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{teamKeyResults.length}</p>
+                      <p className="text-[10px] text-muted-foreground">KRs</p>
                     </div>
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <TrendingUp className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">{teamProgress}%</p>
-                      <p className="text-xs text-muted-foreground">{language === 'es' ? 'Progreso' : 'Progress'}</p>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <TrendingUp className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{teamProgress}%</p>
+                      <p className="text-[10px] text-muted-foreground">{language === 'es' ? 'Progreso' : 'Progress'}</p>
                     </div>
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <DollarSign className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">${(teamInvestment / 1000).toFixed(0)}K</p>
-                      <p className="text-xs text-muted-foreground">{language === 'es' ? 'Inversión' : 'Investment'}</p>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <Gauge className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{team.metrics.velocity}</p>
+                      <p className="text-[10px] text-muted-foreground">Velocity</p>
+                    </div>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <span className="text-sm">{team.metrics.happinessIndex >= 8.5 ? '😄' : team.metrics.happinessIndex >= 7 ? '🙂' : '😐'}</span>
+                      <p className="text-base font-bold">{team.metrics.happinessIndex.toFixed(1)}</p>
+                      <p className="text-[10px] text-muted-foreground">Happiness</p>
                     </div>
                   </div>
 
@@ -370,6 +382,9 @@ function TeamDetailContent({ team, language, navigate, highlightedKRId }: TeamDe
             </div>
           </div>
         )}
+
+        {/* Performance Metrics */}
+        <TeamMetricsPanel metrics={team.metrics} language={language} />
 
         {/* Key Results with collapsible and inherited colors */}
         <div>
@@ -572,5 +587,111 @@ function TeamDetailContent({ team, language, navigate, highlightedKRId }: TeamDe
         )}
       </div>
     </>
+  );
+}
+
+function TrendIcon({ trend }: { trend: 'improving' | 'stable' | 'declining' }) {
+  if (trend === 'improving') return <TrendingUp className="h-3.5 w-3.5 text-status-success" />;
+  if (trend === 'declining') return <TrendingDown className="h-3.5 w-3.5 text-status-critical" />;
+  return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
+}
+
+function TeamMetricsPanel({ metrics, language }: { metrics: TeamMetrics; language: 'en' | 'es' }) {
+  const getHappinessColor = (v: number) => {
+    if (v >= 8) return 'text-status-success';
+    if (v >= 6) return 'text-status-warning';
+    return 'text-status-critical';
+  };
+
+  const getHappinessEmoji = (v: number) => {
+    if (v >= 8.5) return '😄';
+    if (v >= 7) return '🙂';
+    if (v >= 5) return '😐';
+    return '😟';
+  };
+
+  const metricItems = [
+    {
+      icon: <Clock className="h-4 w-4" />,
+      label: 'Lead Time',
+      value: `${metrics.leadTime}d`,
+      description: language === 'es' ? 'Idea → Entrega' : 'Idea → Delivery',
+      trend: metrics.leadTimeTrend,
+      invertTrend: true, // lower is better
+    },
+    {
+      icon: <Zap className="h-4 w-4" />,
+      label: 'Cycle Time',
+      value: `${metrics.cycleTime}d`,
+      description: language === 'es' ? 'Inicio → Hecho' : 'Start → Done',
+      trend: metrics.cycleTimeTrend,
+      invertTrend: true,
+    },
+    {
+      icon: <BarChart3 className="h-4 w-4" />,
+      label: 'Throughput',
+      value: `${metrics.throughput}`,
+      description: language === 'es' ? 'Items / sprint' : 'Items / sprint',
+      trend: metrics.throughputTrend,
+      invertTrend: false,
+    },
+    {
+      icon: <Gauge className="h-4 w-4" />,
+      label: 'Velocity',
+      value: `${metrics.velocity} pts`,
+      description: language === 'es' ? 'Puntos / sprint' : 'Points / sprint',
+      trend: metrics.velocityTrend,
+      invertTrend: false,
+    },
+  ];
+
+  return (
+    <div>
+      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+        {language === 'es' ? 'Métricas de Rendimiento' : 'Performance Metrics'}
+      </h3>
+      
+      {/* Flow Metrics - 2x2 grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+        {metricItems.map((item) => (
+          <div key={item.label} className="p-3 rounded-xl bg-muted/40 border border-border space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">{item.icon}</span>
+              <TrendIcon trend={item.trend} />
+            </div>
+            <p className="text-xl font-bold tracking-tight">{item.value}</p>
+            <p className="text-[11px] font-medium text-muted-foreground leading-tight">{item.label}</p>
+            <p className="text-[10px] text-muted-foreground/70">{item.description}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Happiness Index - featured card */}
+      <div className="p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200/50 dark:border-amber-800/30 flex items-center gap-4">
+        <span className="text-3xl">{getHappinessEmoji(metrics.happinessIndex)}</span>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold">Happiness Index</p>
+            <TrendIcon trend={metrics.happinessTrend} />
+          </div>
+          <p className={cn("text-2xl font-bold", getHappinessColor(metrics.happinessIndex))}>
+            {metrics.happinessIndex.toFixed(1)}
+            <span className="text-sm font-normal text-muted-foreground"> / 10</span>
+          </p>
+        </div>
+        {/* Mini bar visualization */}
+        <div className="w-24 h-3 bg-muted rounded-full overflow-hidden">
+          <div 
+            className={cn(
+              "h-full rounded-full transition-all",
+              metrics.happinessIndex >= 8 ? "bg-status-success" :
+              metrics.happinessIndex >= 6 ? "bg-status-warning" : "bg-status-critical"
+            )}
+            style={{ width: `${metrics.happinessIndex * 10}%` }}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

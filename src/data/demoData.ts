@@ -49,6 +49,19 @@ export interface TeamMember {
   avatar?: string;
 }
 
+export interface TeamMetrics {
+  leadTime: number; // days - from idea to delivery
+  cycleTime: number; // days - from start to done
+  throughput: number; // items completed per sprint
+  velocity: number; // story points per sprint
+  happinessIndex: number; // 1-10 scale
+  leadTimeTrend: 'improving' | 'stable' | 'declining';
+  cycleTimeTrend: 'improving' | 'stable' | 'declining';
+  throughputTrend: 'improving' | 'stable' | 'declining';
+  velocityTrend: 'improving' | 'stable' | 'declining';
+  happinessTrend: 'improving' | 'stable' | 'declining';
+}
+
 export interface Team {
   id: string;
   name: string;
@@ -62,6 +75,7 @@ export interface Team {
   skillIds: string[];
   unitType: 'core' | 'extended';
   parentUnitIds: string[];
+  metrics: TeamMetrics;
 }
 
 export interface StrategicUnit {
@@ -584,6 +598,7 @@ export const teams: Team[] = [
     skillIds: ['skill-1', 'skill-2', 'skill-9', 'skill-10'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
+    metrics: { leadTime: 12, cycleTime: 5, throughput: 8, velocity: 34, happinessIndex: 8.2, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable' },
   },
   { 
     id: 'team-2', 
@@ -607,6 +622,7 @@ export const teams: Team[] = [
     skillIds: ['skill-3', 'skill-4'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
+    metrics: { leadTime: 10, cycleTime: 4, throughput: 12, velocity: 42, happinessIndex: 8.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving' },
   },
   { 
     id: 'team-3', 
@@ -632,6 +648,7 @@ export const teams: Team[] = [
     skillIds: ['skill-5', 'skill-6', 'skill-7'],
     unitType: 'core',
     parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 15, cycleTime: 7, throughput: 10, velocity: 38, happinessIndex: 7.1, leadTimeTrend: 'declining', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'declining' },
   },
   { 
     id: 'team-4', 
@@ -658,6 +675,7 @@ export const teams: Team[] = [
     skillIds: ['skill-8'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5, leadTimeTrend: 'declining', cycleTimeTrend: 'declining', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'declining' },
   },
   { 
     id: 'team-5', 
@@ -679,6 +697,7 @@ export const teams: Team[] = [
     skillIds: ['skill-11', 'skill-12'],
     unitType: 'core',
     parentUnitIds: ['unit-3'],
+    metrics: { leadTime: 7, cycleTime: 3, throughput: 18, velocity: 48, happinessIndex: 9.2, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving' },
   },
   { 
     id: 'team-6', 
@@ -701,6 +720,7 @@ export const teams: Team[] = [
     skillIds: ['skill-13', 'skill-14'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 9, cycleTime: 4, throughput: 14, velocity: 36, happinessIndex: 7.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'stable', velocityTrend: 'improving', happinessTrend: 'stable' },
   },
   { 
     id: 'team-7', 
@@ -722,6 +742,7 @@ export const teams: Team[] = [
     skillIds: ['skill-15', 'skill-16'],
     unitType: 'core',
     parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.5, leadTimeTrend: 'stable', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'stable', happinessTrend: 'improving' },
   },
   { 
     id: 'team-8', 
@@ -743,6 +764,7 @@ export const teams: Team[] = [
     skillIds: ['skill-17', 'skill-18'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'stable' },
   },
   { 
     id: 'team-9', 
@@ -763,6 +785,7 @@ export const teams: Team[] = [
     skillIds: ['skill-19', 'skill-20'],
     unitType: 'extended',
     parentUnitIds: ['unit-1'],
+    metrics: { leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0, leadTimeTrend: 'stable', cycleTimeTrend: 'declining', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'stable' },
   },
   { 
     id: 'team-10', 
@@ -784,6 +807,7 @@ export const teams: Team[] = [
     skillIds: ['skill-21', 'skill-22'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
+    metrics: { leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving' },
   },
 ];
 
