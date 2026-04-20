@@ -49,6 +49,15 @@ export interface TeamMember {
   avatar?: string;
 }
 
+export interface MetricsSnapshot {
+  sprint: string;
+  leadTime: number;
+  cycleTime: number;
+  throughput: number;
+  velocity: number;
+  happinessIndex: number;
+}
+
 export interface TeamMetrics {
   leadTime: number; // days - from idea to delivery
   cycleTime: number; // days - from start to done
@@ -60,6 +69,7 @@ export interface TeamMetrics {
   throughputTrend: 'improving' | 'stable' | 'declining';
   velocityTrend: 'improving' | 'stable' | 'declining';
   happinessTrend: 'improving' | 'stable' | 'declining';
+  history: MetricsSnapshot[];
 }
 
 export interface Team {
