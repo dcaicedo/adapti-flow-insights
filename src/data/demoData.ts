@@ -190,7 +190,7 @@ export const dynamics: Dynamic[] = [
     icon: '🎯',
     objectiveIds: ['obj-1'],
     progress: 85,
-    investment: 120000,
+    investment: 480000,
   },
   {
     id: 'culture',
@@ -201,7 +201,7 @@ export const dynamics: Dynamic[] = [
     icon: '💛',
     objectiveIds: ['obj-2', 'obj-3'],
     progress: 72,
-    investment: 85000,
+    investment: 340000,
   },
   {
     id: 'business',
@@ -212,7 +212,7 @@ export const dynamics: Dynamic[] = [
     icon: '💼',
     objectiveIds: ['obj-4', 'obj-5', 'obj-6'],
     progress: 68,
-    investment: 250000,
+    investment: 1050000,
   },
   {
     id: 'structure',
@@ -223,7 +223,7 @@ export const dynamics: Dynamic[] = [
     icon: '🏗️',
     objectiveIds: ['obj-7'],
     progress: 45,
-    investment: 60000,
+    investment: 250000,
   },
   {
     id: 'entrepreneurship',
@@ -234,7 +234,7 @@ export const dynamics: Dynamic[] = [
     icon: '🚀',
     objectiveIds: ['obj-8', 'obj-9'],
     progress: 78,
-    investment: 180000,
+    investment: 720000,
   },
 ];
 
@@ -248,7 +248,7 @@ export const objectives: Objective[] = [
     dynamicId: 'purpose',
     keyResultIds: ['kr-1', 'kr-2'],
     progress: 85,
-    investment: 120000,
+    investment: 480000,
     status: 'on-track',
   },
   {
@@ -260,7 +260,7 @@ export const objectives: Objective[] = [
     dynamicId: 'culture',
     keyResultIds: ['kr-3', 'kr-4'],
     progress: 72,
-    investment: 45000,
+    investment: 180000,
     status: 'on-track',
   },
   {
@@ -272,7 +272,7 @@ export const objectives: Objective[] = [
     dynamicId: 'culture',
     keyResultIds: ['kr-5'],
     progress: 65,
-    investment: 40000,
+    investment: 160000,
     status: 'attention',
   },
   {
@@ -284,7 +284,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-6', 'kr-7'],
     progress: 68,
-    investment: 150000,
+    investment: 620000,
     status: 'on-track',
   },
   {
@@ -296,7 +296,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-8'],
     progress: 55,
-    investment: 60000,
+    investment: 250000,
     status: 'attention',
   },
   {
@@ -308,7 +308,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-9'],
     progress: 42,
-    investment: 40000,
+    investment: 180000,
     status: 'critical',
   },
   {
@@ -320,7 +320,7 @@ export const objectives: Objective[] = [
     dynamicId: 'structure',
     keyResultIds: ['kr-10', 'kr-11'],
     progress: 45,
-    investment: 60000,
+    investment: 250000,
     status: 'attention',
   },
   {
@@ -332,7 +332,7 @@ export const objectives: Objective[] = [
     dynamicId: 'entrepreneurship',
     keyResultIds: ['kr-12', 'kr-13'],
     progress: 78,
-    investment: 100000,
+    investment: 400000,
     status: 'on-track',
   },
   {
@@ -344,7 +344,7 @@ export const objectives: Objective[] = [
     dynamicId: 'entrepreneurship',
     keyResultIds: ['kr-14'],
     progress: 82,
-    investment: 80000,
+    investment: 320000,
     status: 'on-track',
   },
 ];
