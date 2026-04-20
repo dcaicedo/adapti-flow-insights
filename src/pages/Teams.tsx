@@ -221,21 +221,26 @@ export default function Teams() {
                 
                 <CardContent className="space-y-4">
                   {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <Target className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">{teamKeyResults.length}</p>
-                      <p className="text-xs text-muted-foreground">KRs</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <Target className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{teamKeyResults.length}</p>
+                      <p className="text-[10px] text-muted-foreground">KRs</p>
                     </div>
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <TrendingUp className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">{teamProgress}%</p>
-                      <p className="text-xs text-muted-foreground">{language === 'es' ? 'Progreso' : 'Progress'}</p>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <TrendingUp className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{teamProgress}%</p>
+                      <p className="text-[10px] text-muted-foreground">{language === 'es' ? 'Progreso' : 'Progress'}</p>
                     </div>
-                    <div className="p-2 sm:p-3 bg-muted/50 rounded-lg text-center">
-                      <DollarSign className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
-                      <p className="text-lg font-bold">${(teamInvestment / 1000).toFixed(0)}K</p>
-                      <p className="text-xs text-muted-foreground">{language === 'es' ? 'Inversión' : 'Investment'}</p>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <Gauge className="h-3.5 w-3.5 mx-auto mb-0.5 text-muted-foreground" />
+                      <p className="text-base font-bold">{team.metrics.velocity}</p>
+                      <p className="text-[10px] text-muted-foreground">Velocity</p>
+                    </div>
+                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                      <span className="text-sm">{team.metrics.happinessIndex >= 8.5 ? '😄' : team.metrics.happinessIndex >= 7 ? '🙂' : '😐'}</span>
+                      <p className="text-base font-bold">{team.metrics.happinessIndex.toFixed(1)}</p>
+                      <p className="text-[10px] text-muted-foreground">Happiness</p>
                     </div>
                   </div>
 
