@@ -49,6 +49,15 @@ export interface TeamMember {
   avatar?: string;
 }
 
+export interface MetricsSnapshot {
+  sprint: string;
+  leadTime: number;
+  cycleTime: number;
+  throughput: number;
+  velocity: number;
+  happinessIndex: number;
+}
+
 export interface TeamMetrics {
   leadTime: number; // days - from idea to delivery
   cycleTime: number; // days - from start to done
@@ -60,6 +69,7 @@ export interface TeamMetrics {
   throughputTrend: 'improving' | 'stable' | 'declining';
   velocityTrend: 'improving' | 'stable' | 'declining';
   happinessTrend: 'improving' | 'stable' | 'declining';
+  history: MetricsSnapshot[];
 }
 
 export interface Team {
@@ -180,7 +190,7 @@ export const dynamics: Dynamic[] = [
     icon: '🎯',
     objectiveIds: ['obj-1'],
     progress: 85,
-    investment: 120000,
+    investment: 480000,
   },
   {
     id: 'culture',
@@ -191,7 +201,7 @@ export const dynamics: Dynamic[] = [
     icon: '💛',
     objectiveIds: ['obj-2', 'obj-3'],
     progress: 72,
-    investment: 85000,
+    investment: 340000,
   },
   {
     id: 'business',
@@ -202,7 +212,7 @@ export const dynamics: Dynamic[] = [
     icon: '💼',
     objectiveIds: ['obj-4', 'obj-5', 'obj-6'],
     progress: 68,
-    investment: 250000,
+    investment: 1050000,
   },
   {
     id: 'structure',
@@ -213,7 +223,7 @@ export const dynamics: Dynamic[] = [
     icon: '🏗️',
     objectiveIds: ['obj-7'],
     progress: 45,
-    investment: 60000,
+    investment: 250000,
   },
   {
     id: 'entrepreneurship',
@@ -224,7 +234,7 @@ export const dynamics: Dynamic[] = [
     icon: '🚀',
     objectiveIds: ['obj-8', 'obj-9'],
     progress: 78,
-    investment: 180000,
+    investment: 720000,
   },
 ];
 
@@ -238,7 +248,7 @@ export const objectives: Objective[] = [
     dynamicId: 'purpose',
     keyResultIds: ['kr-1', 'kr-2'],
     progress: 85,
-    investment: 120000,
+    investment: 480000,
     status: 'on-track',
   },
   {
@@ -250,7 +260,7 @@ export const objectives: Objective[] = [
     dynamicId: 'culture',
     keyResultIds: ['kr-3', 'kr-4'],
     progress: 72,
-    investment: 45000,
+    investment: 180000,
     status: 'on-track',
   },
   {
@@ -262,7 +272,7 @@ export const objectives: Objective[] = [
     dynamicId: 'culture',
     keyResultIds: ['kr-5'],
     progress: 65,
-    investment: 40000,
+    investment: 160000,
     status: 'attention',
   },
   {
@@ -274,7 +284,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-6', 'kr-7'],
     progress: 68,
-    investment: 150000,
+    investment: 620000,
     status: 'on-track',
   },
   {
@@ -286,7 +296,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-8'],
     progress: 55,
-    investment: 60000,
+    investment: 250000,
     status: 'attention',
   },
   {
@@ -298,7 +308,7 @@ export const objectives: Objective[] = [
     dynamicId: 'business',
     keyResultIds: ['kr-9'],
     progress: 42,
-    investment: 40000,
+    investment: 180000,
     status: 'critical',
   },
   {
@@ -310,7 +320,7 @@ export const objectives: Objective[] = [
     dynamicId: 'structure',
     keyResultIds: ['kr-10', 'kr-11'],
     progress: 45,
-    investment: 60000,
+    investment: 250000,
     status: 'attention',
   },
   {
@@ -322,7 +332,7 @@ export const objectives: Objective[] = [
     dynamicId: 'entrepreneurship',
     keyResultIds: ['kr-12', 'kr-13'],
     progress: 78,
-    investment: 100000,
+    investment: 400000,
     status: 'on-track',
   },
   {
@@ -334,13 +344,12 @@ export const objectives: Objective[] = [
     dynamicId: 'entrepreneurship',
     keyResultIds: ['kr-14'],
     progress: 82,
-    investment: 80000,
+    investment: 320000,
     status: 'on-track',
   },
 ];
 
 export const keyResults: KeyResult[] = [
-  // Purpose Objective Key Results
   {
     id: 'kr-1',
     title: 'Align 100% of team OKRs with organizational purpose by Q2',
@@ -350,8 +359,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-1',
     teamIds: ['team-1'],
     progress: 85,
-    investment: 80000,
-    budget: 95000,
+    investment: 320000,
+    budget: 385000,
     status: 'on-track',
     skills: ['skill-1', 'skill-2'],
   },
@@ -364,12 +373,11 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-1',
     teamIds: ['team-1', 'team-2'],
     progress: 90,
-    investment: 40000,
-    budget: 45000,
+    investment: 160000,
+    budget: 185000,
     status: 'on-track',
     skills: ['skill-2'],
   },
-  // Culture Objective Key Results
   {
     id: 'kr-3',
     title: 'Achieve 90% employee engagement score by Q3',
@@ -379,8 +387,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-2',
     teamIds: ['team-2'],
     progress: 72,
-    investment: 25000,
-    budget: 35000,
+    investment: 100000,
+    budget: 140000,
     status: 'on-track',
     skills: ['skill-3', 'skill-4'],
   },
@@ -393,8 +401,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-2',
     teamIds: ['team-2', 'team-4'],
     progress: 68,
-    investment: 20000,
-    budget: 30000,
+    investment: 80000,
+    budget: 120000,
     status: 'on-track',
     skills: ['skill-3'],
   },
@@ -407,12 +415,11 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-3',
     teamIds: ['team-2'],
     progress: 65,
-    investment: 40000,
-    budget: 50000,
+    investment: 160000,
+    budget: 200000,
     status: 'attention',
     skills: ['skill-3'],
   },
-  // Business Objective Key Results
   {
     id: 'kr-6',
     title: 'Increase recurring revenue by 25% year-over-year',
@@ -422,22 +429,22 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-4',
     teamIds: ['team-3'],
     progress: 68,
-    investment: 100000,
-    budget: 120000,
+    investment: 420000,
+    budget: 500000,
     status: 'on-track',
     skills: ['skill-5', 'skill-6'],
   },
   {
     id: 'kr-7',
-    title: 'Expand to 3 new market segments with positive unit economics',
-    titleEs: 'Expandirse a 3 nuevos segmentos de mercado con unit economics positivos',
-    description: 'Specific: Identify and enter new verticals. Measurable: 3 segments with positive CAC/LTV. Achievable: Market research complete. Relevant: Diversifies revenue. Time-bound: By Q4.',
-    descriptionEs: 'Específico: Identificar y entrar a nuevas verticales. Medible: 3 segmentos con CAC/LTV positivo. Alcanzable: Investigación de mercado completa. Relevante: Diversifica ingresos. Temporal: Para Q4.',
+    title: 'Expand to 3 new Canadian market segments with positive unit economics',
+    titleEs: 'Expandirse a 3 nuevos segmentos del mercado canadiense con unit economics positivos',
+    description: 'Specific: Identify and enter new verticals in Western Canada, Quebec, and Atlantic provinces. Measurable: 3 segments with positive CAC/LTV. Achievable: Market research complete. Relevant: Diversifies revenue. Time-bound: By Q4.',
+    descriptionEs: 'Específico: Identificar y entrar a nuevas verticales en el oeste de Canadá, Quebec y provincias atlánticas. Medible: 3 segmentos con CAC/LTV positivo. Alcanzable: Investigación de mercado completa. Relevante: Diversifica ingresos. Temporal: Para Q4.',
     objectiveId: 'obj-4',
     teamIds: ['team-3', 'team-5'],
     progress: 55,
-    investment: 50000,
-    budget: 70000,
+    investment: 200000,
+    budget: 280000,
     status: 'attention',
     skills: ['skill-5'],
   },
@@ -450,8 +457,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-5',
     teamIds: ['team-3'],
     progress: 55,
-    investment: 60000,
-    budget: 75000,
+    investment: 250000,
+    budget: 310000,
     status: 'attention',
     skills: ['skill-6', 'skill-7'],
   },
@@ -464,12 +471,11 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-6',
     teamIds: ['team-4'],
     progress: 42,
-    investment: 40000,
-    budget: 60000,
+    investment: 180000,
+    budget: 250000,
     status: 'critical',
     skills: ['skill-8'],
   },
-  // Structure Objective Key Results
   {
     id: 'kr-10',
     title: 'Redesign organizational structure to Adaptive Team model',
@@ -479,8 +485,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-7',
     teamIds: ['team-1'],
     progress: 45,
-    investment: 40000,
-    budget: 55000,
+    investment: 165000,
+    budget: 225000,
     status: 'attention',
     skills: ['skill-9', 'skill-10'],
   },
@@ -493,12 +499,11 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-7',
     teamIds: ['team-1', 'team-2'],
     progress: 50,
-    investment: 20000,
-    budget: 30000,
+    investment: 85000,
+    budget: 125000,
     status: 'attention',
     skills: ['skill-10'],
   },
-  // Entrepreneurship Objective Key Results
   {
     id: 'kr-12',
     title: 'Validate 5 new business hypotheses through rapid experiments',
@@ -508,8 +513,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-8',
     teamIds: ['team-5'],
     progress: 80,
-    investment: 60000,
-    budget: 70000,
+    investment: 240000,
+    budget: 290000,
     status: 'on-track',
     skills: ['skill-11'],
   },
@@ -522,8 +527,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-8',
     teamIds: ['team-5', 'team-3'],
     progress: 75,
-    investment: 40000,
-    budget: 55000,
+    investment: 160000,
+    budget: 225000,
     status: 'on-track',
     skills: ['skill-12'],
   },
@@ -536,8 +541,8 @@ export const keyResults: KeyResult[] = [
     objectiveId: 'obj-9',
     teamIds: ['team-5', 'team-1'],
     progress: 82,
-    investment: 80000,
-    budget: 100000,
+    investment: 320000,
+    budget: 400000,
     status: 'on-track',
     skills: ['skill-11'],
   },
@@ -598,7 +603,14 @@ export const teams: Team[] = [
     skillIds: ['skill-1', 'skill-2', 'skill-9', 'skill-10'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
-    metrics: { leadTime: 12, cycleTime: 5, throughput: 8, velocity: 34, happinessIndex: 8.2, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable' },
+    metrics: { leadTime: 12, cycleTime: 5, throughput: 8, velocity: 34, happinessIndex: 8.2, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable', history: [
+      { sprint: 'S1', leadTime: 18, cycleTime: 8, throughput: 5, velocity: 25, happinessIndex: 7.2 },
+      { sprint: 'S2', leadTime: 16, cycleTime: 7, throughput: 6, velocity: 28, happinessIndex: 7.5 },
+      { sprint: 'S3', leadTime: 15, cycleTime: 6, throughput: 6, velocity: 30, happinessIndex: 7.8 },
+      { sprint: 'S4', leadTime: 14, cycleTime: 6, throughput: 7, velocity: 31, happinessIndex: 8.0 },
+      { sprint: 'S5', leadTime: 13, cycleTime: 5, throughput: 7, velocity: 33, happinessIndex: 8.1 },
+      { sprint: 'S6', leadTime: 12, cycleTime: 5, throughput: 8, velocity: 34, happinessIndex: 8.2 },
+    ] },
   },
   { 
     id: 'team-2', 
@@ -622,7 +634,14 @@ export const teams: Team[] = [
     skillIds: ['skill-3', 'skill-4'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
-    metrics: { leadTime: 10, cycleTime: 4, throughput: 12, velocity: 42, happinessIndex: 8.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving' },
+    metrics: { leadTime: 10, cycleTime: 4, throughput: 12, velocity: 42, happinessIndex: 8.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 11, cycleTime: 6, throughput: 8, velocity: 38, happinessIndex: 7.9 },
+      { sprint: 'S2', leadTime: 10, cycleTime: 6, throughput: 9, velocity: 39, happinessIndex: 8.1 },
+      { sprint: 'S3', leadTime: 10, cycleTime: 5, throughput: 10, velocity: 40, happinessIndex: 8.3 },
+      { sprint: 'S4', leadTime: 10, cycleTime: 5, throughput: 11, velocity: 41, happinessIndex: 8.5 },
+      { sprint: 'S5', leadTime: 10, cycleTime: 4, throughput: 11, velocity: 42, happinessIndex: 8.6 },
+      { sprint: 'S6', leadTime: 10, cycleTime: 4, throughput: 12, velocity: 42, happinessIndex: 8.8 },
+    ] },
   },
   { 
     id: 'team-3', 
@@ -648,7 +667,14 @@ export const teams: Team[] = [
     skillIds: ['skill-5', 'skill-6', 'skill-7'],
     unitType: 'core',
     parentUnitIds: ['unit-2'],
-    metrics: { leadTime: 15, cycleTime: 7, throughput: 10, velocity: 38, happinessIndex: 7.1, leadTimeTrend: 'declining', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'declining' },
+    metrics: { leadTime: 15, cycleTime: 7, throughput: 10, velocity: 38, happinessIndex: 7.1, leadTimeTrend: 'declining', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'declining', history: [
+      { sprint: 'S1', leadTime: 12, cycleTime: 6, throughput: 12, velocity: 44, happinessIndex: 8.0 },
+      { sprint: 'S2', leadTime: 12, cycleTime: 6, throughput: 11, velocity: 42, happinessIndex: 7.8 },
+      { sprint: 'S3', leadTime: 13, cycleTime: 7, throughput: 11, velocity: 41, happinessIndex: 7.6 },
+      { sprint: 'S4', leadTime: 14, cycleTime: 7, throughput: 10, velocity: 40, happinessIndex: 7.4 },
+      { sprint: 'S5', leadTime: 14, cycleTime: 7, throughput: 10, velocity: 39, happinessIndex: 7.2 },
+      { sprint: 'S6', leadTime: 15, cycleTime: 7, throughput: 10, velocity: 38, happinessIndex: 7.1 },
+    ] },
   },
   { 
     id: 'team-4', 
@@ -675,7 +701,14 @@ export const teams: Team[] = [
     skillIds: ['skill-8'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
-    metrics: { leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5, leadTimeTrend: 'declining', cycleTimeTrend: 'declining', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'declining' },
+    metrics: { leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5, leadTimeTrend: 'declining', cycleTimeTrend: 'declining', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'declining', history: [
+      { sprint: 'S1', leadTime: 14, cycleTime: 5, throughput: 10, velocity: 52, happinessIndex: 7.8 },
+      { sprint: 'S2', leadTime: 15, cycleTime: 6, throughput: 11, velocity: 53, happinessIndex: 7.5 },
+      { sprint: 'S3', leadTime: 16, cycleTime: 6, throughput: 12, velocity: 54, happinessIndex: 7.2 },
+      { sprint: 'S4', leadTime: 17, cycleTime: 7, throughput: 13, velocity: 55, happinessIndex: 6.9 },
+      { sprint: 'S5', leadTime: 17, cycleTime: 7, throughput: 14, velocity: 55, happinessIndex: 6.7 },
+      { sprint: 'S6', leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5 },
+    ] },
   },
   { 
     id: 'team-5', 
@@ -697,7 +730,14 @@ export const teams: Team[] = [
     skillIds: ['skill-11', 'skill-12'],
     unitType: 'core',
     parentUnitIds: ['unit-3'],
-    metrics: { leadTime: 7, cycleTime: 3, throughput: 18, velocity: 48, happinessIndex: 9.2, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving' },
+    metrics: { leadTime: 7, cycleTime: 3, throughput: 18, velocity: 48, happinessIndex: 9.2, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 12, cycleTime: 6, throughput: 10, velocity: 35, happinessIndex: 8.0 },
+      { sprint: 'S2', leadTime: 11, cycleTime: 5, throughput: 12, velocity: 38, happinessIndex: 8.3 },
+      { sprint: 'S3', leadTime: 10, cycleTime: 5, throughput: 14, velocity: 41, happinessIndex: 8.6 },
+      { sprint: 'S4', leadTime: 9, cycleTime: 4, throughput: 15, velocity: 44, happinessIndex: 8.9 },
+      { sprint: 'S5', leadTime: 8, cycleTime: 3, throughput: 17, velocity: 46, happinessIndex: 9.0 },
+      { sprint: 'S6', leadTime: 7, cycleTime: 3, throughput: 18, velocity: 48, happinessIndex: 9.2 },
+    ] },
   },
   { 
     id: 'team-6', 
@@ -720,7 +760,14 @@ export const teams: Team[] = [
     skillIds: ['skill-13', 'skill-14'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
-    metrics: { leadTime: 9, cycleTime: 4, throughput: 14, velocity: 36, happinessIndex: 7.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'stable', velocityTrend: 'improving', happinessTrend: 'stable' },
+    metrics: { leadTime: 9, cycleTime: 4, throughput: 14, velocity: 36, happinessIndex: 7.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'stable', velocityTrend: 'improving', happinessTrend: 'stable', history: [
+      { sprint: 'S1', leadTime: 10, cycleTime: 6, throughput: 13, velocity: 30, happinessIndex: 7.5 },
+      { sprint: 'S2', leadTime: 9, cycleTime: 6, throughput: 13, velocity: 32, happinessIndex: 7.6 },
+      { sprint: 'S3', leadTime: 9, cycleTime: 5, throughput: 14, velocity: 33, happinessIndex: 7.7 },
+      { sprint: 'S4', leadTime: 9, cycleTime: 5, throughput: 14, velocity: 34, happinessIndex: 7.8 },
+      { sprint: 'S5', leadTime: 9, cycleTime: 4, throughput: 14, velocity: 35, happinessIndex: 7.8 },
+      { sprint: 'S6', leadTime: 9, cycleTime: 4, throughput: 14, velocity: 36, happinessIndex: 7.8 },
+    ] },
   },
   { 
     id: 'team-7', 
@@ -742,7 +789,14 @@ export const teams: Team[] = [
     skillIds: ['skill-15', 'skill-16'],
     unitType: 'core',
     parentUnitIds: ['unit-2'],
-    metrics: { leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.5, leadTimeTrend: 'stable', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'stable', happinessTrend: 'improving' },
+    metrics: { leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.5, leadTimeTrend: 'stable', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'stable', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 14, cycleTime: 7, throughput: 8, velocity: 28, happinessIndex: 6.8 },
+      { sprint: 'S2', leadTime: 14, cycleTime: 7, throughput: 8, velocity: 29, happinessIndex: 7.0 },
+      { sprint: 'S3', leadTime: 14, cycleTime: 6, throughput: 9, velocity: 29, happinessIndex: 7.1 },
+      { sprint: 'S4', leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.2 },
+      { sprint: 'S5', leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.4 },
+      { sprint: 'S6', leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.5 },
+    ] },
   },
   { 
     id: 'team-8', 
@@ -764,7 +818,14 @@ export const teams: Team[] = [
     skillIds: ['skill-17', 'skill-18'],
     unitType: 'extended',
     parentUnitIds: ['unit-2'],
-    metrics: { leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'stable' },
+    metrics: { leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'stable', history: [
+      { sprint: 'S1', leadTime: 14, cycleTime: 7, throughput: 8, velocity: 38, happinessIndex: 7.5 },
+      { sprint: 'S2', leadTime: 13, cycleTime: 7, throughput: 9, velocity: 39, happinessIndex: 7.6 },
+      { sprint: 'S3', leadTime: 13, cycleTime: 6, throughput: 9, velocity: 39, happinessIndex: 7.7 },
+      { sprint: 'S4', leadTime: 12, cycleTime: 6, throughput: 10, velocity: 40, happinessIndex: 7.8 },
+      { sprint: 'S5', leadTime: 11, cycleTime: 5, throughput: 10, velocity: 40, happinessIndex: 7.9 },
+      { sprint: 'S6', leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9 },
+    ] },
   },
   { 
     id: 'team-9', 
@@ -785,7 +846,14 @@ export const teams: Team[] = [
     skillIds: ['skill-19', 'skill-20'],
     unitType: 'extended',
     parentUnitIds: ['unit-1'],
-    metrics: { leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0, leadTimeTrend: 'stable', cycleTimeTrend: 'declining', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'stable' },
+    metrics: { leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0, leadTimeTrend: 'stable', cycleTimeTrend: 'declining', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'stable', history: [
+      { sprint: 'S1', leadTime: 15, cycleTime: 5, throughput: 8, velocity: 32, happinessIndex: 7.2 },
+      { sprint: 'S2', leadTime: 15, cycleTime: 5, throughput: 7, velocity: 31, happinessIndex: 7.1 },
+      { sprint: 'S3', leadTime: 16, cycleTime: 6, throughput: 7, velocity: 30, happinessIndex: 7.0 },
+      { sprint: 'S4', leadTime: 16, cycleTime: 6, throughput: 7, velocity: 29, happinessIndex: 7.0 },
+      { sprint: 'S5', leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0 },
+      { sprint: 'S6', leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0 },
+    ] },
   },
   { 
     id: 'team-10', 
@@ -807,7 +875,14 @@ export const teams: Team[] = [
     skillIds: ['skill-21', 'skill-22'],
     unitType: 'core',
     parentUnitIds: ['unit-1'],
-    metrics: { leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving' },
+    metrics: { leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 14, cycleTime: 6, throughput: 10, velocity: 32, happinessIndex: 7.5 },
+      { sprint: 'S2', leadTime: 13, cycleTime: 5, throughput: 11, velocity: 35, happinessIndex: 7.8 },
+      { sprint: 'S3', leadTime: 11, cycleTime: 5, throughput: 13, velocity: 38, happinessIndex: 8.0 },
+      { sprint: 'S4', leadTime: 10, cycleTime: 4, throughput: 14, velocity: 41, happinessIndex: 8.2 },
+      { sprint: 'S5', leadTime: 9, cycleTime: 3, throughput: 15, velocity: 43, happinessIndex: 8.4 },
+      { sprint: 'S6', leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5 },
+    ] },
   },
 ];
 
