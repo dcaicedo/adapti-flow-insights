@@ -49,6 +49,19 @@ export interface TeamMember {
   avatar?: string;
 }
 
+export interface TeamMetrics {
+  leadTime: number; // days - from idea to delivery
+  cycleTime: number; // days - from start to done
+  throughput: number; // items completed per sprint
+  velocity: number; // story points per sprint
+  happinessIndex: number; // 1-10 scale
+  leadTimeTrend: 'improving' | 'stable' | 'declining';
+  cycleTimeTrend: 'improving' | 'stable' | 'declining';
+  throughputTrend: 'improving' | 'stable' | 'declining';
+  velocityTrend: 'improving' | 'stable' | 'declining';
+  happinessTrend: 'improving' | 'stable' | 'declining';
+}
+
 export interface Team {
   id: string;
   name: string;
@@ -62,6 +75,7 @@ export interface Team {
   skillIds: string[];
   unitType: 'core' | 'extended';
   parentUnitIds: string[];
+  metrics: TeamMetrics;
 }
 
 export interface StrategicUnit {
