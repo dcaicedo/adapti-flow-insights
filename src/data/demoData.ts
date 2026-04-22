@@ -858,9 +858,20 @@ export const teams: Team[] = [
       { sprint: 'S5', leadTime: 11, cycleTime: 5, throughput: 10, velocity: 40, happinessIndex: 7.9 },
       { sprint: 'S6', leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9 },
     ] },
+    teamCategory: 'digital-maintain' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 2.5, leadTimeForChanges: 12, changeFailureRate: 8,
+      deploymentFrequencyTrend: 'improving' as const, leadTimeForChangesTrend: 'improving' as const, changeFailureRateTrend: 'stable' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 1.5, leadTimeForChanges: 20, changeFailureRate: 10 },
+        { sprint: 'S2', deploymentFrequency: 1.8, leadTimeForChanges: 18, changeFailureRate: 9 },
+        { sprint: 'S3', deploymentFrequency: 2.0, leadTimeForChanges: 16, changeFailureRate: 9 },
+        { sprint: 'S4', deploymentFrequency: 2.2, leadTimeForChanges: 14, changeFailureRate: 8 },
+        { sprint: 'S5', deploymentFrequency: 2.4, leadTimeForChanges: 13, changeFailureRate: 8 },
+        { sprint: 'S6', deploymentFrequency: 2.5, leadTimeForChanges: 12, changeFailureRate: 8 },
+      ],
+    },
   },
-  { 
-    id: 'team-9', 
     name: 'Legal & Compliance', 
     nameEs: 'Legal y Cumplimiento',
     description: 'Legal affairs, compliance and governance',
