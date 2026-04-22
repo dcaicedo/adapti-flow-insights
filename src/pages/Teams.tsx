@@ -610,11 +610,12 @@ function TrendIcon({ trend }: { trend: 'improving' | 'stable' | 'declining' }) {
   return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
-function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory }: { 
+function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, teamMembers }: { 
   metrics: TeamMetrics; 
   language: 'en' | 'es'; 
   devOpsMetrics?: DevOpsMetrics;
   teamCategory?: 'digital-build' | 'digital-maintain' | 'business';
+  teamMembers?: { id: string; name: string }[];
 }) {
   const [selectedMetric, setSelectedMetric] = useState<{
     key: string; label: string; value: string; trend: 'improving' | 'stable' | 'declining';
