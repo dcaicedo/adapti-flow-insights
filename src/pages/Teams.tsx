@@ -10,6 +10,7 @@ import { SkillIndicator } from '@/components/ui/SkillIndicator';
 import { DynamicBadge } from '@/components/ui/DynamicBadge';
 import { TraceabilityBreadcrumb } from '@/components/ui/TraceabilityBreadcrumb';
 import { getTeamColor, getDynamicColorClasses } from '@/utils/dynamicColors';
+import { MetricDetailDialog } from '@/components/MetricDetailDialog';
 import { 
   Users, 
   Target, 
@@ -30,13 +31,17 @@ import {
   Zap,
   BarChart3,
   Gauge,
-  Smile
+  Smile,
+  Rocket,
+  GitBranch,
+  AlertTriangle,
+  Server
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { LineChart, Line, ResponsiveContainer, Tooltip as RechartsTooltip, Area, AreaChart } from 'recharts';
-import type { Team, KeyResult, TeamMetrics } from '@/data/demoData';
+import type { Team, KeyResult, TeamMetrics, DevOpsMetrics } from '@/data/demoData';
 
 export default function Teams() {
   const { t, language } = useLanguage();
