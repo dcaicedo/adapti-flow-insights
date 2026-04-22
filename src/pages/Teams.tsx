@@ -73,7 +73,7 @@ export default function Teams() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1400px] mx-auto"
+      className="page-container"
     >
       {/* Header & Team Selector */}
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end gap-4">
