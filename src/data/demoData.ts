@@ -728,6 +728,19 @@ export const teams: Team[] = [
       { sprint: 'S5', leadTime: 17, cycleTime: 7, throughput: 14, velocity: 55, happinessIndex: 6.7 },
       { sprint: 'S6', leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5 },
     ] },
+    teamCategory: 'digital-maintain' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 1.2, leadTimeForChanges: 18, changeFailureRate: 12,
+      deploymentFrequencyTrend: 'stable' as const, leadTimeForChangesTrend: 'declining' as const, changeFailureRateTrend: 'declining' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 1.8, leadTimeForChanges: 8, changeFailureRate: 5 },
+        { sprint: 'S2', deploymentFrequency: 1.6, leadTimeForChanges: 10, changeFailureRate: 7 },
+        { sprint: 'S3', deploymentFrequency: 1.5, leadTimeForChanges: 12, changeFailureRate: 8 },
+        { sprint: 'S4', deploymentFrequency: 1.3, leadTimeForChanges: 14, changeFailureRate: 10 },
+        { sprint: 'S5', deploymentFrequency: 1.2, leadTimeForChanges: 16, changeFailureRate: 11 },
+        { sprint: 'S6', deploymentFrequency: 1.2, leadTimeForChanges: 18, changeFailureRate: 12 },
+      ],
+    },
   },
   { 
     id: 'team-5', 
