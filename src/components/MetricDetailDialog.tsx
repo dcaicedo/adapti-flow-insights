@@ -95,14 +95,7 @@ export function MetricDetailDialog({
   }, [memberMetrics, heatmapMetric]);
 
   // Histogram bins
-  const binCount = 6;
-  const binWidth = (max - min) / binCount || 1;
-  const bins = Array.from({ length: binCount }, (_, i) => {
-    const lo = min + i * binWidth;
-    const hi = lo + binWidth;
-    const count = values.filter(v => v >= lo && (i === binCount - 1 ? v <= hi : v < hi)).length;
-    return { range: `${lo.toFixed(1)}–${hi.toFixed(1)}`, count, lo, hi };
-  });
+  const bins = buildHistogramBins(values);
 
   // Prepare member bar data sorted by relevant metric
   const memberBarData = useMemo(() => {
