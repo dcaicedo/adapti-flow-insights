@@ -3,7 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { DynamicCard } from '@/components/ui/DynamicCard';
 import { AlertCard } from '@/components/ui/AlertCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
-import { dynamics, objectives, skills, alerts, purpose, teams, keyResults, getKeyResultsForTeam } from '@/data/demoData';
+import { dynamics, objectives, skills, alerts, purpose, teams, keyResults, getKeyResultsForTeam, computeTeamProgress } from '@/data/demoData';
 import { 
   TrendingUp, 
   Target, 
@@ -253,9 +253,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {teams.slice(0, 3).map((team) => {
                 const teamKRs = getKeyResultsForTeam(team.id);
-                const avgProgress = teamKRs.length > 0 
-                  ? Math.round(teamKRs.reduce((sum, kr) => sum + kr.progress, 0) / teamKRs.length)
-                  : 0;
+                const avgProgress = computeTeamProgress(team.id);
                 
                 return (
                   <div 
