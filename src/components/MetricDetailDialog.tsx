@@ -156,6 +156,13 @@ export function MetricDetailDialog({
           </DialogTitle>
         </DialogHeader>
 
+        {!hasData ? (
+          <div className="py-12 text-center">
+            <p className="text-muted-foreground text-sm">{language === 'es' ? 'Sin datos todavía' : 'No data yet'}</p>
+            <p className="text-muted-foreground/60 text-xs mt-1">{language === 'es' ? 'Los datos aparecerán cuando haya historial disponible.' : 'Data will appear when history is available.'}</p>
+          </div>
+        ) : (
+        <>
         {/* Stats summary */}
         <div className="grid grid-cols-5 gap-2 my-2">
           {[
