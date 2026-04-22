@@ -872,6 +872,8 @@ export const teams: Team[] = [
       ],
     },
   },
+  { 
+    id: 'team-9', 
     name: 'Legal & Compliance', 
     nameEs: 'Legal y Cumplimiento',
     description: 'Legal affairs, compliance and governance',
