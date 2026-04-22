@@ -867,7 +867,6 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory }: {
     </div>
   );
 }
-    if (v >= 8) return 'text-status-success';
     if (v >= 6) return 'text-status-warning';
     return 'text-status-critical';
   };
