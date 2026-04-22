@@ -70,7 +70,7 @@ export default function Objectives() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="p-4 sm:p-6 lg:p-8 space-y-6"
+      className="page-container"
     >
       {/* Header */}
       <motion.div variants={itemVariants} className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
