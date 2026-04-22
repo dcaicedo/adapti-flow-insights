@@ -16,6 +16,7 @@ import {
   generateHeatmapData,
   type MemberMetrics,
 } from '@/data/metricsData';
+import { extractValues, computeStats, safePercentile, buildHistogramBins } from './metricCalculations';
 
 interface MetricDetailDialogProps {
   open: boolean;
