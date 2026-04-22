@@ -58,12 +58,29 @@ export interface MetricsSnapshot {
   happinessIndex: number;
 }
 
+export interface DevOpsSnapshot {
+  sprint: string;
+  deploymentFrequency: number; // deploys per day
+  leadTimeForChanges: number; // hours from commit to production
+  changeFailureRate: number; // percentage
+}
+
+export interface DevOpsMetrics {
+  deploymentFrequency: number;
+  leadTimeForChanges: number;
+  changeFailureRate: number;
+  deploymentFrequencyTrend: 'improving' | 'stable' | 'declining';
+  leadTimeForChangesTrend: 'improving' | 'stable' | 'declining';
+  changeFailureRateTrend: 'improving' | 'stable' | 'declining';
+  history: DevOpsSnapshot[];
+}
+
 export interface TeamMetrics {
-  leadTime: number; // days - from idea to delivery
-  cycleTime: number; // days - from start to done
-  throughput: number; // items completed per sprint
-  velocity: number; // story points per sprint
-  happinessIndex: number; // 1-10 scale
+  leadTime: number;
+  cycleTime: number;
+  throughput: number;
+  velocity: number;
+  happinessIndex: number;
   leadTimeTrend: 'improving' | 'stable' | 'declining';
   cycleTimeTrend: 'improving' | 'stable' | 'declining';
   throughputTrend: 'improving' | 'stable' | 'declining';
@@ -86,6 +103,8 @@ export interface Team {
   unitType: 'core' | 'extended';
   parentUnitIds: string[];
   metrics: TeamMetrics;
+  teamCategory?: 'digital-build' | 'digital-maintain' | 'business';
+  devOpsMetrics?: DevOpsMetrics;
 }
 
 export interface StrategicUnit {
