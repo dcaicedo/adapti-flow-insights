@@ -621,7 +621,7 @@ export const teams: Team[] = [
     alignment: 92, 
     keyResultIds: ['kr-1', 'kr-2', 'kr-10', 'kr-11', 'kr-14'], 
     skillIds: ['skill-1', 'skill-2', 'skill-9', 'skill-10'],
-    unitType: 'core', hoursPerWeek: 27,
+    unitType: 'core',
     parentUnitIds: ['unit-1'],
     metrics: { leadTime: 12, cycleTime: 5, throughput: 8, velocity: 34, happinessIndex: 8.2, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable', history: [
       { sprint: 'S1', leadTime: 18, cycleTime: 8, throughput: 5, velocity: 25, happinessIndex: 7.2 },
@@ -652,7 +652,7 @@ export const teams: Team[] = [
     alignment: 88, 
     keyResultIds: ['kr-2', 'kr-3', 'kr-4', 'kr-5', 'kr-11'], 
     skillIds: ['skill-3', 'skill-4'],
-    unitType: 'core', hoursPerWeek: 37,
+    unitType: 'core',
     parentUnitIds: ['unit-1'],
     metrics: { leadTime: 10, cycleTime: 4, throughput: 12, velocity: 42, happinessIndex: 8.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 11, cycleTime: 6, throughput: 8, velocity: 38, happinessIndex: 7.9 },
@@ -685,7 +685,7 @@ export const teams: Team[] = [
     alignment: 75, 
     keyResultIds: ['kr-6', 'kr-7', 'kr-8', 'kr-13'], 
     skillIds: ['skill-5', 'skill-6', 'skill-7'],
-    unitType: 'core', hoursPerWeek: 29,
+    unitType: 'core',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 15, cycleTime: 7, throughput: 10, velocity: 38, happinessIndex: 7.1, leadTimeTrend: 'declining', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'declining', history: [
       { sprint: 'S1', leadTime: 12, cycleTime: 6, throughput: 12, velocity: 44, happinessIndex: 8.0 },
@@ -719,7 +719,7 @@ export const teams: Team[] = [
     alignment: 60, 
     keyResultIds: ['kr-4', 'kr-9'], 
     skillIds: ['skill-8'],
-    unitType: 'extended', hoursPerWeek: 12,
+    unitType: 'extended',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5, leadTimeTrend: 'declining', cycleTimeTrend: 'declining', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'declining', history: [
       { sprint: 'S1', leadTime: 14, cycleTime: 5, throughput: 10, velocity: 52, happinessIndex: 7.8 },
@@ -761,7 +761,7 @@ export const teams: Team[] = [
     alignment: 95, 
     keyResultIds: ['kr-7', 'kr-12', 'kr-13', 'kr-14'], 
     skillIds: ['skill-11', 'skill-12'],
-    unitType: 'core', hoursPerWeek: 30,
+    unitType: 'core',
     parentUnitIds: ['unit-3'],
     metrics: { leadTime: 7, cycleTime: 3, throughput: 18, velocity: 48, happinessIndex: 9.2, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 12, cycleTime: 6, throughput: 10, velocity: 35, happinessIndex: 8.0 },
@@ -791,7 +791,7 @@ export const teams: Team[] = [
     alignment: 78, 
     keyResultIds: ['kr-7'], 
     skillIds: ['skill-13', 'skill-14'],
-    unitType: 'extended', hoursPerWeek: 16,
+    unitType: 'extended',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 9, cycleTime: 4, throughput: 14, velocity: 36, happinessIndex: 7.8, leadTimeTrend: 'stable', cycleTimeTrend: 'improving', throughputTrend: 'stable', velocityTrend: 'improving', happinessTrend: 'stable', history: [
       { sprint: 'S1', leadTime: 10, cycleTime: 6, throughput: 13, velocity: 30, happinessIndex: 7.5 },
@@ -820,7 +820,7 @@ export const teams: Team[] = [
     alignment: 82, 
     keyResultIds: ['kr-6', 'kr-14'], 
     skillIds: ['skill-15', 'skill-16'],
-    unitType: 'core', hoursPerWeek: 32,
+    unitType: 'core',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 14, cycleTime: 6, throughput: 9, velocity: 30, happinessIndex: 7.5, leadTimeTrend: 'stable', cycleTimeTrend: 'stable', throughputTrend: 'stable', velocityTrend: 'stable', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 14, cycleTime: 7, throughput: 8, velocity: 28, happinessIndex: 6.8 },
@@ -849,7 +849,7 @@ export const teams: Team[] = [
     alignment: 70, 
     keyResultIds: ['kr-9'], 
     skillIds: ['skill-17', 'skill-18'],
-    unitType: 'extended', hoursPerWeek: 10,
+    unitType: 'extended',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'stable', history: [
       { sprint: 'S1', leadTime: 14, cycleTime: 7, throughput: 8, velocity: 38, happinessIndex: 7.5 },
@@ -890,7 +890,7 @@ export const teams: Team[] = [
     alignment: 85, 
     keyResultIds: ['kr-10'], 
     skillIds: ['skill-19', 'skill-20'],
-    unitType: 'extended', hoursPerWeek: 9,
+    unitType: 'extended',
     parentUnitIds: ['unit-1'],
     metrics: { leadTime: 16, cycleTime: 7, throughput: 7, velocity: 28, happinessIndex: 7.0, leadTimeTrend: 'stable', cycleTimeTrend: 'declining', throughputTrend: 'stable', velocityTrend: 'declining', happinessTrend: 'stable', history: [
       { sprint: 'S1', leadTime: 15, cycleTime: 5, throughput: 8, velocity: 32, happinessIndex: 7.2 },
@@ -919,7 +919,7 @@ export const teams: Team[] = [
     alignment: 80, 
     keyResultIds: ['kr-10', 'kr-11', 'kr-9'], 
     skillIds: ['skill-21', 'skill-22'],
-    unitType: 'core', hoursPerWeek: 32,
+    unitType: 'core',
     parentUnitIds: ['unit-1'],
     metrics: { leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 14, cycleTime: 6, throughput: 10, velocity: 32, happinessIndex: 7.5 },
@@ -950,7 +950,7 @@ export const teams: Team[] = [
     alignment: 88,
     keyResultIds: ['kr-9', 'kr-12'],
     skillIds: ['skill-8', 'skill-11'],
-    unitType: 'core', hoursPerWeek: 33,
+    unitType: 'core',
     parentUnitIds: ['unit-3'],
     metrics: { leadTime: 6, cycleTime: 2, throughput: 22, velocity: 62, happinessIndex: 9.1, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 10, cycleTime: 4, throughput: 14, velocity: 45, happinessIndex: 8.0 },
@@ -993,7 +993,7 @@ export const teams: Team[] = [
     alignment: 82,
     keyResultIds: ['kr-6', 'kr-13'],
     skillIds: ['skill-5', 'skill-12'],
-    unitType: 'core', hoursPerWeek: 35,
+    unitType: 'core',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 8, cycleTime: 3, throughput: 19, velocity: 58, happinessIndex: 8.4, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable', history: [
       { sprint: 'S1', leadTime: 12, cycleTime: 5, throughput: 12, velocity: 42, happinessIndex: 7.8 },
@@ -1036,7 +1036,7 @@ export const teams: Team[] = [
     alignment: 85,
     keyResultIds: ['kr-8', 'kr-9'],
     skillIds: ['skill-6', 'skill-8'],
-    unitType: 'core', hoursPerWeek: 39,
+    unitType: 'core',
     parentUnitIds: ['unit-2'],
     metrics: { leadTime: 7, cycleTime: 3, throughput: 20, velocity: 55, happinessIndex: 8.7, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving', history: [
       { sprint: 'S1', leadTime: 11, cycleTime: 5, throughput: 13, velocity: 48, happinessIndex: 7.9 },
