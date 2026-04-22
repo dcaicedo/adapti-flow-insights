@@ -619,6 +619,8 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory }: {
   const [selectedMetric, setSelectedMetric] = useState<{
     key: string; label: string; value: string; trend: 'improving' | 'stable' | 'declining';
     dataKey: string; history: any[]; unit?: string;
+    teamMembers?: { id: string; name: string }[];
+    teamBaseCycle?: number; teamBaseLead?: number; teamBaseThroughput?: number; teamBaseVelocity?: number; teamBaseHappiness?: number;
   } | null>(null);
 
   const getHappinessColor = (v: number) => {
