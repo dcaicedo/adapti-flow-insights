@@ -1142,3 +1142,67 @@ export const getUnitsForTeam = (teamId: string) => {
   if (!team) return [];
   return team.parentUnitIds.map(id => getStrategicUnitById(id)).filter(Boolean);
 };
+
+// ============= Computed Progress Helpers =============
+
+/** Compute objective progress as average of its KRs */
+export const computeObjectiveProgress = (objectiveId: string): number => {
+  const krs = getKeyResultsForObjective(objectiveId);
+  if (!krs.length) return 0;
+  return Math.round(krs.reduce((sum, kr) => sum + kr.progress, 0) / krs.length);
+};
+
+/** Compute dynamic progress as average of its objectives' computed progress */
+export const computeDynamicProgress = (dynamicId: string): number => {
+  const objs = getObjectivesForDynamic(dynamicId);
+  if (!objs.length) return 0;
+  return Math.round(objs.reduce((sum, obj) => sum + computeObjectiveProgress(obj.id), 0) / objs.length);
+};
+
+/** Compute team progress as average of all KRs assigned to the team */
+export const computeTeamProgress = (teamId: string): number => {
+  const krs = getKeyResultsForTeam(teamId);
+  if (!krs.length) return 0;
+  return Math.round(krs.reduce((sum, kr) => sum + kr.progress, 0) / krs.length);
+};
+
+/** Compute total investment for a team across all its KRs */
+export const computeTeamInvestment = (teamId: string): number => {
+  return getKeyResultsForTeam(teamId).reduce((sum, kr) => sum + kr.investment, 0);
+};
+
+/** Compute total budget for a team across all its KRs */
+export const computeTeamBudget = (teamId: string): number => {
+  return getKeyResultsForTeam(teamId).reduce((sum, kr) => sum + kr.budget, 0);
+};
+
+/** Get all members contributing to an objective (via KRs → teams) */
+export const getMembersForObjective = (objectiveId: string): TeamMember[] => {
+  const krs = getKeyResultsForObjective(objectiveId);
+  const memberMap = new Map<string, TeamMember>();
+  krs.forEach(kr => {
+    kr.teamIds.forEach(teamId => {
+      const team = getTeamById(teamId);
+      if (team) {
+        team.members.forEach(m => memberMap.set(m.id, m));
+      }
+    });
+  });
+  return Array.from(memberMap.values());
+};
+
+/** Get all teams contributing to a dynamic (via objectives → KRs → teams) */
+export const getTeamsForDynamic = (dynamicId: string): Team[] => {
+  const objs = getObjectivesForDynamic(dynamicId);
+  const teamMap = new Map<string, Team>();
+  objs.forEach(obj => {
+    const krs = getKeyResultsForObjective(obj.id);
+    krs.forEach(kr => {
+      kr.teamIds.forEach(teamId => {
+        const team = getTeamById(teamId);
+        if (team) teamMap.set(team.id, team);
+      });
+    });
+  });
+  return Array.from(teamMap.values());
+};
