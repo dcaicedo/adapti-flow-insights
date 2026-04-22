@@ -43,7 +43,7 @@ export interface TeamMember {
   name: string;
   role: string;
   roleEs: string;
-  unitType: 'core', hoursPerWeek: 25 | 'extended';
+  unitType: 'core' | 'extended';
   hoursPerWeek: number; // core > 20, extended <= 20
   area: string;
   areaEs: string;
@@ -101,7 +101,7 @@ export interface Team {
   alignment: number;
   keyResultIds: string[];
   skillIds: string[];
-  unitType: 'core', hoursPerWeek: 33 | 'extended';
+  unitType: 'core' | 'extended';
   parentUnitIds: string[];
   metrics: TeamMetrics;
   teamCategory?: 'digital-build' | 'digital-maintain' | 'business';
