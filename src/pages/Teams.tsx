@@ -254,15 +254,23 @@ export default function Teams() {
                   <ProgressBar value={teamProgress} color={teamColor} showLabel={false} />
 
                   {/* Alignment & Unit Type */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
-                    <span className={cn(
-                      "text-xs px-2 py-1 rounded-full font-medium",
-                      team.unitType === 'core' 
-                        ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
-                        : "bg-muted text-muted-foreground"
-                    )}>
-                      {team.unitType === 'core' ? 'Core Unit' : 'Extended Unit'}
-                    </span>
+                  <div className="flex items-center justify-between flex-wrap gap-1 pt-2 border-t border-border">
+                    <div className="flex items-center gap-1.5">
+                      <span className={cn(
+                        "text-xs px-2 py-1 rounded-full font-medium",
+                        team.unitType === 'core' 
+                          ? "bg-adaptativa-blue/10 text-adaptativa-blue" 
+                          : "bg-muted text-muted-foreground"
+                      )}>
+                        {team.unitType === 'core' ? 'Core Unit' : 'Extended Unit'}
+                      </span>
+                      {team.teamCategory === 'digital-build' && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-medium">🤖 AI</span>
+                      )}
+                      {team.teamCategory === 'digital-maintain' && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-400 font-medium">🖥️</span>
+                      )}
+                    </div>
                     <span className={cn("text-sm font-semibold", getAlignmentColor(team.alignment))}>
                       {team.alignment}% {language === 'es' ? 'alineado' : 'aligned'}
                     </span>
