@@ -398,7 +398,7 @@ function TeamDetailContent({ team, language, navigate, highlightedKRId }: TeamDe
         )}
 
         {/* Performance Metrics */}
-        <TeamMetricsPanel metrics={team.metrics} language={language} devOpsMetrics={team.devOpsMetrics} teamCategory={team.teamCategory} />
+        <TeamMetricsPanel metrics={team.metrics} language={language} devOpsMetrics={team.devOpsMetrics} teamCategory={team.teamCategory} teamMembers={team.members.map(m => ({ id: m.id, name: m.name }))} />
 
         {/* Key Results with collapsible and inherited colors */}
         <div>
@@ -741,6 +741,8 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
             onClick={() => setSelectedMetric({
               key: item.dataKey, label: item.label, value: item.value,
               trend: item.trend, dataKey: item.dataKey, history: metrics.history, unit: item.unit,
+              teamMembers, teamBaseCycle: metrics.cycleTime, teamBaseLead: metrics.leadTime,
+              teamBaseThroughput: metrics.throughput, teamBaseVelocity: metrics.velocity, teamBaseHappiness: metrics.happinessIndex,
             })}
           >
             <div className="flex items-center justify-between">
@@ -783,6 +785,8 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
                 onClick={() => setSelectedMetric({
                   key: item.dataKey, label: item.label, value: item.value,
                   trend: item.trend, dataKey: item.dataKey, history: devOpsMetrics.history, unit: item.unit,
+                  teamMembers, teamBaseCycle: metrics.cycleTime, teamBaseLead: metrics.leadTime,
+                  teamBaseThroughput: metrics.throughput, teamBaseVelocity: metrics.velocity, teamBaseHappiness: metrics.happinessIndex,
                 })}
               >
                 <div className="flex items-center justify-between">
