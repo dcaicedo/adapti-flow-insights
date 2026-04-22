@@ -815,15 +815,17 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
         </div>
       )}
 
-      {/* Happiness Index */}
+      {/* Happiness Index — Fixed scaling and labeling */}
       <div 
         className="p-4 rounded-xl bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20 cursor-pointer hover:border-amber-500/40 transition-all"
         onClick={() => setSelectedMetric({
           key: 'happinessIndex', label: 'Happiness Index', value: metrics.happinessIndex.toFixed(1),
           trend: metrics.happinessTrend, dataKey: 'happinessIndex', history: metrics.history,
+          teamMembers, teamBaseCycle: metrics.cycleTime, teamBaseLead: metrics.leadTime,
+          teamBaseThroughput: metrics.throughput, teamBaseVelocity: metrics.velocity, teamBaseHappiness: metrics.happinessIndex,
         })}
       >
-        <div className="flex items-center gap-4 mb-3">
+        <div className="flex items-center gap-4 mb-2">
           <span className="text-3xl">{getHappinessEmoji(metrics.happinessIndex)}</span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -835,17 +837,30 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
               <span className="text-sm font-normal text-muted-foreground"> / 10</span>
             </p>
           </div>
-          <div className="w-24 h-3 bg-muted rounded-full overflow-hidden">
+        </div>
+        {/* Fixed bar with labeled scale markers */}
+        <div className="mb-3">
+          <div className="relative h-4 bg-muted rounded-full overflow-hidden">
             <div 
               className={cn(
-                "h-full rounded-full transition-all",
+                "h-full rounded-full transition-all relative",
                 metrics.happinessIndex >= 8 ? "bg-status-success" :
                 metrics.happinessIndex >= 6 ? "bg-status-warning" : "bg-status-critical"
               )}
               style={{ width: `${metrics.happinessIndex * 10}%` }}
-            />
+            >
+              <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-bold text-white drop-shadow">
+                {metrics.happinessIndex.toFixed(1)}
+              </span>
+            </div>
+          </div>
+          <div className="flex justify-between mt-0.5 px-0.5">
+            {[0, 2, 4, 6, 8, 10].map(v => (
+              <span key={v} className="text-[8px] text-muted-foreground">{v}</span>
+            ))}
           </div>
         </div>
+        {/* Sprint trend with proper Y-axis domain */}
         <div className="h-16">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={metrics.history}>
@@ -855,6 +870,7 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
                   <stop offset="100%" stopColor="hsl(var(--status-warning))" stopOpacity={0.05} />
                 </linearGradient>
               </defs>
+              <YAxis domain={[0, 10]} hide />
               <RechartsTooltip
                 contentStyle={{ fontSize: 11, borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                 formatter={(value: number) => [value.toFixed(1), 'Happiness']}
@@ -878,9 +894,14 @@ function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory, team
         dataKey={selectedMetric?.dataKey || ''}
         unit={selectedMetric?.unit}
         language={language}
+        teamMembers={selectedMetric?.teamMembers}
+        teamBaseCycle={selectedMetric?.teamBaseCycle}
+        teamBaseLead={selectedMetric?.teamBaseLead}
+        teamBaseThroughput={selectedMetric?.teamBaseThroughput}
+        teamBaseVelocity={selectedMetric?.teamBaseVelocity}
+        teamBaseHappiness={selectedMetric?.teamBaseHappiness}
       />
     </div>
   );
 }
-
 
