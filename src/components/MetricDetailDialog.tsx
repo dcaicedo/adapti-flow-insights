@@ -16,6 +16,7 @@ import {
   generateHeatmapData,
   type MemberMetrics,
 } from '@/data/metricsData';
+import { extractValues, computeStats, safePercentile, buildHistogramBins } from './metricCalculations';
 
 interface MetricDetailDialogProps {
   open: boolean;
@@ -68,20 +69,15 @@ export function MetricDetailDialog({
   const trendColor = trend === 'improving' ? 'hsl(var(--status-success))' : 
     trend === 'declining' ? 'hsl(var(--status-critical))' : 'hsl(var(--muted-foreground))';
 
-  const values = history.map((h: any) => (h[dataKey] as number) ?? 0);
-  const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
-  const min = values.length ? Math.min(...values) : 0;
-  const max = values.length ? Math.max(...values) : 0;
-  const stdDev = values.length ? Math.sqrt(values.reduce((sum, v) => sum + (v - avg) ** 2, 0) / values.length) : 0;
-  const lastVal = values[values.length - 1] ?? 0;
-  const prevVal = values[values.length - 2] ?? lastVal;
-  const changePercent = prevVal ? (((lastVal - prevVal) / prevVal) * 100).toFixed(1) : '0';
+  const values = extractValues(history as unknown as Record<string, unknown>[], dataKey);
+  const { avg, min, max, stdDev, lastVal, changePercent } = computeStats(values);
+  const hasData = values.length > 0;
 
   // Cycle time distribution
   const cycleTimeDist = useMemo(() => generateCycleTimeDistribution(teamBaseCycle, 50), [teamBaseCycle]);
-  const p50 = cycleTimeDist[Math.floor(cycleTimeDist.length * 0.5)]?.cycleTime || 0;
-  const p85 = cycleTimeDist[Math.floor(cycleTimeDist.length * 0.85)]?.cycleTime || 0;
-  const p95 = cycleTimeDist[Math.floor(cycleTimeDist.length * 0.95)]?.cycleTime || 0;
+  const p50 = safePercentile(cycleTimeDist, 0.5);
+  const p85 = safePercentile(cycleTimeDist, 0.85);
+  const p95 = safePercentile(cycleTimeDist, 0.95);
 
   // Cumulative flow
   const cumulativeFlow = useMemo(() => generateCumulativeFlowData(teamBaseThroughput * 3), [teamBaseThroughput]);
@@ -99,14 +95,7 @@ export function MetricDetailDialog({
   }, [memberMetrics, heatmapMetric]);
 
   // Histogram bins
-  const binCount = 6;
-  const binWidth = (max - min) / binCount || 1;
-  const bins = Array.from({ length: binCount }, (_, i) => {
-    const lo = min + i * binWidth;
-    const hi = lo + binWidth;
-    const count = values.filter(v => v >= lo && (i === binCount - 1 ? v <= hi : v < hi)).length;
-    return { range: `${lo.toFixed(1)}–${hi.toFixed(1)}`, count, lo, hi };
-  });
+  const bins = buildHistogramBins(values);
 
   // Prepare member bar data sorted by relevant metric
   const memberBarData = useMemo(() => {
@@ -167,6 +156,13 @@ export function MetricDetailDialog({
           </DialogTitle>
         </DialogHeader>
 
+        {!hasData ? (
+          <div className="py-12 text-center">
+            <p className="text-muted-foreground text-sm">{language === 'es' ? 'Sin datos todavía' : 'No data yet'}</p>
+            <p className="text-muted-foreground/60 text-xs mt-1">{language === 'es' ? 'Los datos aparecerán cuando haya historial disponible.' : 'Data will appear when history is available.'}</p>
+          </div>
+        ) : (
+        <>
         {/* Stats summary */}
         <div className="grid grid-cols-5 gap-2 my-2">
           {[
@@ -432,6 +428,8 @@ export function MetricDetailDialog({
             </TabsContent>
           )}
         </Tabs>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );
