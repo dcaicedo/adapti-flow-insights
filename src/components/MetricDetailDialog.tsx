@@ -428,6 +428,8 @@ export function MetricDetailDialog({
             </TabsContent>
           )}
         </Tabs>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );
