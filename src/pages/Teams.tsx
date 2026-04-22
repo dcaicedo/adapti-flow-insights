@@ -85,7 +85,7 @@ export default function Teams() {
           <p className="text-sm text-muted-foreground mt-0.5">
             {language === 'es'
               ? 'Qué está pasando, por qué, y qué hacer después'
-              : 'What's happening, why, and what to do next'}
+              : "What\u2019s happening, why, and what to do next"}
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
