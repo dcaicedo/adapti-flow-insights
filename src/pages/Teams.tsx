@@ -602,8 +602,271 @@ function TrendIcon({ trend }: { trend: 'improving' | 'stable' | 'declining' }) {
   return <Minus className="h-3.5 w-3.5 text-muted-foreground" />;
 }
 
-function TeamMetricsPanel({ metrics, language }: { metrics: TeamMetrics; language: 'en' | 'es' }) {
+function TeamMetricsPanel({ metrics, language, devOpsMetrics, teamCategory }: { 
+  metrics: TeamMetrics; 
+  language: 'en' | 'es'; 
+  devOpsMetrics?: DevOpsMetrics;
+  teamCategory?: 'digital-build' | 'digital-maintain' | 'business';
+}) {
+  const [selectedMetric, setSelectedMetric] = useState<{
+    key: string; label: string; value: string; trend: 'improving' | 'stable' | 'declining';
+    dataKey: string; history: any[]; unit?: string;
+  } | null>(null);
+
   const getHappinessColor = (v: number) => {
+    if (v >= 8) return 'text-status-success';
+    if (v >= 6) return 'text-status-warning';
+    return 'text-status-critical';
+  };
+
+  const getHappinessEmoji = (v: number) => {
+    if (v >= 8.5) return '😄';
+    if (v >= 7) return '🙂';
+    if (v >= 5) return '😐';
+    return '😟';
+  };
+
+  const getTrendColor = (trend: string) => {
+    if (trend === 'improving') return 'hsl(var(--status-success))';
+    if (trend === 'declining') return 'hsl(var(--status-critical))';
+    return 'hsl(var(--muted-foreground))';
+  };
+
+  const metricItems = [
+    {
+      icon: <Clock className="h-4 w-4" />,
+      label: 'Lead Time',
+      value: `${metrics.leadTime}d`,
+      description: language === 'es' ? 'Idea → Entrega' : 'Idea → Delivery',
+      trend: metrics.leadTimeTrend,
+      dataKey: 'leadTime' as const,
+      unit: 'd',
+    },
+    {
+      icon: <Zap className="h-4 w-4" />,
+      label: 'Cycle Time',
+      value: `${metrics.cycleTime}d`,
+      description: language === 'es' ? 'Inicio → Hecho' : 'Start → Done',
+      trend: metrics.cycleTimeTrend,
+      dataKey: 'cycleTime' as const,
+      unit: 'd',
+    },
+    {
+      icon: <BarChart3 className="h-4 w-4" />,
+      label: 'Throughput',
+      value: `${metrics.throughput}`,
+      description: language === 'es' ? 'Items / sprint' : 'Items / sprint',
+      trend: metrics.throughputTrend,
+      dataKey: 'throughput' as const,
+    },
+    {
+      icon: <Gauge className="h-4 w-4" />,
+      label: 'Velocity',
+      value: `${metrics.velocity} pts`,
+      description: language === 'es' ? 'Puntos / sprint' : 'Points / sprint',
+      trend: metrics.velocityTrend,
+      dataKey: 'velocity' as const,
+      unit: 'pts',
+    },
+  ];
+
+  const devOpsItems = devOpsMetrics ? [
+    {
+      icon: <Rocket className="h-4 w-4" />,
+      label: language === 'es' ? 'Frec. Deploy' : 'Deploy Freq.',
+      value: `${devOpsMetrics.deploymentFrequency}/d`,
+      description: language === 'es' ? 'Deploys por día' : 'Deploys per day',
+      trend: devOpsMetrics.deploymentFrequencyTrend,
+      dataKey: 'deploymentFrequency' as const,
+      unit: '/day',
+    },
+    {
+      icon: <GitBranch className="h-4 w-4" />,
+      label: language === 'es' ? 'Lead Cambios' : 'Change Lead',
+      value: `${devOpsMetrics.leadTimeForChanges}h`,
+      description: language === 'es' ? 'Commit → Producción' : 'Commit → Production',
+      trend: devOpsMetrics.leadTimeForChangesTrend,
+      dataKey: 'leadTimeForChanges' as const,
+      unit: 'h',
+    },
+    {
+      icon: <AlertTriangle className="h-4 w-4" />,
+      label: language === 'es' ? 'Tasa Fallo' : 'Failure Rate',
+      value: `${devOpsMetrics.changeFailureRate}%`,
+      description: language === 'es' ? '% deploys fallidos' : '% failed deploys',
+      trend: devOpsMetrics.changeFailureRateTrend,
+      dataKey: 'changeFailureRate' as const,
+      unit: '%',
+    },
+  ] : [];
+
+  const isDigital = teamCategory === 'digital-build' || teamCategory === 'digital-maintain';
+
+  return (
+    <div>
+      <h3 className="text-sm font-semibold mb-1 flex items-center gap-2 flex-wrap">
+        <BarChart3 className="h-4 w-4 text-muted-foreground" />
+        {language === 'es' ? 'Métricas de Rendimiento' : 'Performance Metrics'}
+        {teamCategory && teamCategory !== 'business' && (
+          <span className={cn(
+            "text-[10px] px-2 py-0.5 rounded-full font-medium",
+            teamCategory === 'digital-build' ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" :
+            "bg-sky-500/10 text-sky-700 dark:text-sky-400"
+          )}>
+            {teamCategory === 'digital-build' ? '🤖 Digital · Building with AI' : '🖥️ Digital · Maintaining'}
+          </span>
+        )}
+      </h3>
+      <p className="text-[11px] text-muted-foreground mb-3">
+        {language === 'es' ? '👆 Clic en cualquier métrica para ver gráficos detallados' : '👆 Click any metric for detailed charts'}
+      </p>
+      
+      {/* Flow Metrics with sparklines - CLICKABLE */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+        {metricItems.map((item) => (
+          <div 
+            key={item.label} 
+            className="p-3 rounded-xl bg-muted/40 border border-border space-y-1 cursor-pointer hover:border-primary/50 hover:bg-muted/60 transition-all group"
+            onClick={() => setSelectedMetric({
+              key: item.dataKey, label: item.label, value: item.value,
+              trend: item.trend, dataKey: item.dataKey, history: metrics.history, unit: item.unit,
+            })}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground group-hover:text-primary transition-colors">{item.icon}</span>
+              <TrendIcon trend={item.trend} />
+            </div>
+            <p className="text-xl font-bold tracking-tight">{item.value}</p>
+            <p className="text-[11px] font-medium text-muted-foreground leading-tight">{item.label}</p>
+            <div className="h-8 -mx-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={metrics.history}>
+                  <defs>
+                    <linearGradient id={`grad-${item.dataKey}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={getTrendColor(item.trend)} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={getTrendColor(item.trend)} stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey={item.dataKey} stroke={getTrendColor(item.trend)} strokeWidth={1.5} fill={`url(#grad-${item.dataKey})`} dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* DevOps Metrics for digital teams */}
+      {isDigital && devOpsMetrics && (
+        <div className="mb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Server className="h-3.5 w-3.5 text-muted-foreground" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              DevOps / DORA Metrics
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {devOpsItems.map((item) => (
+              <div 
+                key={item.dataKey} 
+                className="p-3 rounded-xl bg-gradient-to-br from-violet-500/5 to-indigo-500/5 border border-violet-500/20 space-y-1 cursor-pointer hover:border-violet-500/40 transition-all group"
+                onClick={() => setSelectedMetric({
+                  key: item.dataKey, label: item.label, value: item.value,
+                  trend: item.trend, dataKey: item.dataKey, history: devOpsMetrics.history, unit: item.unit,
+                })}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-violet-600 dark:text-violet-400 group-hover:text-violet-500 transition-colors">{item.icon}</span>
+                  <TrendIcon trend={item.trend} />
+                </div>
+                <p className="text-lg font-bold tracking-tight">{item.value}</p>
+                <p className="text-[10px] font-medium text-muted-foreground leading-tight">{item.label}</p>
+                <p className="text-[9px] text-muted-foreground/70">{item.description}</p>
+                <div className="h-6 -mx-1">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={devOpsMetrics.history}>
+                      <defs>
+                        <linearGradient id={`grad-devops-${item.dataKey}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.05} />
+                        </linearGradient>
+                      </defs>
+                      <Area type="monotone" dataKey={item.dataKey} stroke="hsl(var(--primary))" strokeWidth={1.5} fill={`url(#grad-devops-${item.dataKey})`} dot={false} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Happiness Index */}
+      <div 
+        className="p-4 rounded-xl bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20 cursor-pointer hover:border-amber-500/40 transition-all"
+        onClick={() => setSelectedMetric({
+          key: 'happinessIndex', label: 'Happiness Index', value: metrics.happinessIndex.toFixed(1),
+          trend: metrics.happinessTrend, dataKey: 'happinessIndex', history: metrics.history,
+        })}
+      >
+        <div className="flex items-center gap-4 mb-3">
+          <span className="text-3xl">{getHappinessEmoji(metrics.happinessIndex)}</span>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold">Happiness Index</p>
+              <TrendIcon trend={metrics.happinessTrend} />
+            </div>
+            <p className={cn("text-2xl font-bold", getHappinessColor(metrics.happinessIndex))}>
+              {metrics.happinessIndex.toFixed(1)}
+              <span className="text-sm font-normal text-muted-foreground"> / 10</span>
+            </p>
+          </div>
+          <div className="w-24 h-3 bg-muted rounded-full overflow-hidden">
+            <div 
+              className={cn(
+                "h-full rounded-full transition-all",
+                metrics.happinessIndex >= 8 ? "bg-status-success" :
+                metrics.happinessIndex >= 6 ? "bg-status-warning" : "bg-status-critical"
+              )}
+              style={{ width: `${metrics.happinessIndex * 10}%` }}
+            />
+          </div>
+        </div>
+        <div className="h-16">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={metrics.history}>
+              <defs>
+                <linearGradient id="grad-happiness" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--status-warning))" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="hsl(var(--status-warning))" stopOpacity={0.05} />
+                </linearGradient>
+              </defs>
+              <RechartsTooltip
+                contentStyle={{ fontSize: 11, borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                formatter={(value: number) => [value.toFixed(1), 'Happiness']}
+                labelFormatter={(label) => `Sprint ${label}`}
+              />
+              <Area type="monotone" dataKey="happinessIndex" stroke="hsl(var(--status-warning))" strokeWidth={2} fill="url(#grad-happiness)" dot={{ r: 2, fill: 'hsl(var(--status-warning))' }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Metric Detail Dialog */}
+      <MetricDetailDialog
+        open={!!selectedMetric}
+        onOpenChange={(open) => !open && setSelectedMetric(null)}
+        metricKey={selectedMetric?.key || ''}
+        metricLabel={selectedMetric?.label || ''}
+        currentValue={selectedMetric?.value || ''}
+        trend={selectedMetric?.trend || 'stable'}
+        history={selectedMetric?.history || []}
+        dataKey={selectedMetric?.dataKey || ''}
+        unit={selectedMetric?.unit}
+        language={language}
+      />
+    </div>
+  );
+}
     if (v >= 8) return 'text-status-success';
     if (v >= 6) return 'text-status-warning';
     return 'text-status-critical';
