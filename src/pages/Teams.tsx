@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { teams, keyResults, organizationInfo, getKeyResultsForTeam, getSkillsForTeam, getUnitsForTeam, getObjectiveById, getDynamicById } from '@/data/demoData';
+import { teams, keyResults, organizationInfo, getKeyResultsForTeam, getSkillsForTeam, getUnitsForTeam, getObjectiveById, getDynamicById, computeTeamProgress, computeTeamInvestment } from '@/data/demoData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -74,13 +74,8 @@ export default function Teams() {
   });
 
   const getTeamKeyResults = (teamId: string) => getKeyResultsForTeam(teamId);
-  const getTeamInvestment = (teamId: string) => 
-    getTeamKeyResults(teamId).reduce((sum, kr) => sum + kr.investment, 0);
-  const getTeamProgress = (teamId: string) => {
-    const teamKRs = getTeamKeyResults(teamId);
-    if (teamKRs.length === 0) return 0;
-    return Math.round(teamKRs.reduce((sum, kr) => sum + kr.progress, 0) / teamKRs.length);
-  };
+  const getTeamInvestment = (teamId: string) => computeTeamInvestment(teamId);
+  const getTeamProgress = (teamId: string) => computeTeamProgress(teamId);
 
   const getAlignmentColor = (alignment: number) => {
     if (alignment >= 80) return 'text-status-success';
