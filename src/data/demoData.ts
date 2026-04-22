@@ -44,6 +44,7 @@ export interface TeamMember {
   role: string;
   roleEs: string;
   unitType: 'core' | 'extended';
+  hoursPerWeek: number; // core > 20, extended <= 20
   area: string;
   areaEs: string;
   avatar?: string;
