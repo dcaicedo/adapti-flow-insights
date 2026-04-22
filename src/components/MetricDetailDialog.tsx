@@ -68,13 +68,13 @@ export function MetricDetailDialog({
   const trendColor = trend === 'improving' ? 'hsl(var(--status-success))' : 
     trend === 'declining' ? 'hsl(var(--status-critical))' : 'hsl(var(--muted-foreground))';
 
-  const values = history.map((h: any) => h[dataKey] as number);
-  const avg = values.reduce((a, b) => a + b, 0) / values.length;
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const stdDev = Math.sqrt(values.reduce((sum, v) => sum + (v - avg) ** 2, 0) / values.length);
-  const lastVal = values[values.length - 1];
-  const prevVal = values[values.length - 2] || lastVal;
+  const values = history.map((h: any) => (h[dataKey] as number) ?? 0);
+  const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+  const min = values.length ? Math.min(...values) : 0;
+  const max = values.length ? Math.max(...values) : 0;
+  const stdDev = values.length ? Math.sqrt(values.reduce((sum, v) => sum + (v - avg) ** 2, 0) / values.length) : 0;
+  const lastVal = values[values.length - 1] ?? 0;
+  const prevVal = values[values.length - 2] ?? lastVal;
   const changePercent = prevVal ? (((lastVal - prevVal) / prevVal) * 100).toFixed(1) : '0';
 
   // Cycle time distribution
