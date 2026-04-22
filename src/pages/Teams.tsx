@@ -390,7 +390,7 @@ function TeamDetailContent({ team, language, navigate, highlightedKRId }: TeamDe
         )}
 
         {/* Performance Metrics */}
-        <TeamMetricsPanel metrics={team.metrics} language={language} />
+        <TeamMetricsPanel metrics={team.metrics} language={language} devOpsMetrics={team.devOpsMetrics} teamCategory={team.teamCategory} />
 
         {/* Key Results with collapsible and inherited colors */}
         <div>
