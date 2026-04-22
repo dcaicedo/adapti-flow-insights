@@ -1060,6 +1060,9 @@ export const teams: Team[] = [
     },
   },
 ];
+
+export const alerts: Alert[] = [
+  {
     id: 'alert-1',
     type: 'critical',
     message: 'Product Development skill decreased while objective deadline approaches. Immediate action required.',
