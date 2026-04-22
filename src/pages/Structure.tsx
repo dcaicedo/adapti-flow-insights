@@ -51,7 +51,7 @@ export default function Structure() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="p-6 lg:p-8 space-y-6"
+      className="page-container"
     >
       {/* Header */}
       <motion.div variants={itemVariants}>
