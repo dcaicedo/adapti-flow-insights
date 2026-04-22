@@ -69,7 +69,7 @@ export function MetricDetailDialog({
   const trendColor = trend === 'improving' ? 'hsl(var(--status-success))' : 
     trend === 'declining' ? 'hsl(var(--status-critical))' : 'hsl(var(--muted-foreground))';
 
-  const values = extractValues(history as Record<string, unknown>[], dataKey);
+  const values = extractValues(history as unknown as Record<string, unknown>[], dataKey);
   const { avg, min, max, stdDev, lastVal, changePercent } = computeStats(values);
   const hasData = values.length > 0;
 
