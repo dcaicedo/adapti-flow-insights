@@ -58,12 +58,29 @@ export interface MetricsSnapshot {
   happinessIndex: number;
 }
 
+export interface DevOpsSnapshot {
+  sprint: string;
+  deploymentFrequency: number; // deploys per day
+  leadTimeForChanges: number; // hours from commit to production
+  changeFailureRate: number; // percentage
+}
+
+export interface DevOpsMetrics {
+  deploymentFrequency: number;
+  leadTimeForChanges: number;
+  changeFailureRate: number;
+  deploymentFrequencyTrend: 'improving' | 'stable' | 'declining';
+  leadTimeForChangesTrend: 'improving' | 'stable' | 'declining';
+  changeFailureRateTrend: 'improving' | 'stable' | 'declining';
+  history: DevOpsSnapshot[];
+}
+
 export interface TeamMetrics {
-  leadTime: number; // days - from idea to delivery
-  cycleTime: number; // days - from start to done
-  throughput: number; // items completed per sprint
-  velocity: number; // story points per sprint
-  happinessIndex: number; // 1-10 scale
+  leadTime: number;
+  cycleTime: number;
+  throughput: number;
+  velocity: number;
+  happinessIndex: number;
   leadTimeTrend: 'improving' | 'stable' | 'declining';
   cycleTimeTrend: 'improving' | 'stable' | 'declining';
   throughputTrend: 'improving' | 'stable' | 'declining';
@@ -86,6 +103,8 @@ export interface Team {
   unitType: 'core' | 'extended';
   parentUnitIds: string[];
   metrics: TeamMetrics;
+  teamCategory?: 'digital-build' | 'digital-maintain' | 'business';
+  devOpsMetrics?: DevOpsMetrics;
 }
 
 export interface StrategicUnit {
@@ -709,6 +728,19 @@ export const teams: Team[] = [
       { sprint: 'S5', leadTime: 17, cycleTime: 7, throughput: 14, velocity: 55, happinessIndex: 6.7 },
       { sprint: 'S6', leadTime: 18, cycleTime: 8, throughput: 15, velocity: 55, happinessIndex: 6.5 },
     ] },
+    teamCategory: 'digital-maintain' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 1.2, leadTimeForChanges: 18, changeFailureRate: 12,
+      deploymentFrequencyTrend: 'stable' as const, leadTimeForChangesTrend: 'declining' as const, changeFailureRateTrend: 'declining' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 1.8, leadTimeForChanges: 8, changeFailureRate: 5 },
+        { sprint: 'S2', deploymentFrequency: 1.6, leadTimeForChanges: 10, changeFailureRate: 7 },
+        { sprint: 'S3', deploymentFrequency: 1.5, leadTimeForChanges: 12, changeFailureRate: 8 },
+        { sprint: 'S4', deploymentFrequency: 1.3, leadTimeForChanges: 14, changeFailureRate: 10 },
+        { sprint: 'S5', deploymentFrequency: 1.2, leadTimeForChanges: 16, changeFailureRate: 11 },
+        { sprint: 'S6', deploymentFrequency: 1.2, leadTimeForChanges: 18, changeFailureRate: 12 },
+      ],
+    },
   },
   { 
     id: 'team-5', 
@@ -826,6 +858,19 @@ export const teams: Team[] = [
       { sprint: 'S5', leadTime: 11, cycleTime: 5, throughput: 10, velocity: 40, happinessIndex: 7.9 },
       { sprint: 'S6', leadTime: 11, cycleTime: 5, throughput: 11, velocity: 40, happinessIndex: 7.9 },
     ] },
+    teamCategory: 'digital-maintain' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 2.5, leadTimeForChanges: 12, changeFailureRate: 8,
+      deploymentFrequencyTrend: 'improving' as const, leadTimeForChangesTrend: 'improving' as const, changeFailureRateTrend: 'stable' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 1.5, leadTimeForChanges: 20, changeFailureRate: 10 },
+        { sprint: 'S2', deploymentFrequency: 1.8, leadTimeForChanges: 18, changeFailureRate: 9 },
+        { sprint: 'S3', deploymentFrequency: 2.0, leadTimeForChanges: 16, changeFailureRate: 9 },
+        { sprint: 'S4', deploymentFrequency: 2.2, leadTimeForChanges: 14, changeFailureRate: 8 },
+        { sprint: 'S5', deploymentFrequency: 2.4, leadTimeForChanges: 13, changeFailureRate: 8 },
+        { sprint: 'S6', deploymentFrequency: 2.5, leadTimeForChanges: 12, changeFailureRate: 8 },
+      ],
+    },
   },
   { 
     id: 'team-9', 
@@ -883,6 +928,136 @@ export const teams: Team[] = [
       { sprint: 'S5', leadTime: 9, cycleTime: 3, throughput: 15, velocity: 43, happinessIndex: 8.4 },
       { sprint: 'S6', leadTime: 8, cycleTime: 3, throughput: 16, velocity: 45, happinessIndex: 8.5 },
     ] },
+  },
+  {
+    id: 'team-11',
+    name: 'AI Platform',
+    nameEs: 'Plataforma de IA',
+    description: 'Building AI-powered analytics and automation platform',
+    descriptionEs: 'Construyendo plataforma de analíticas y automatización con IA',
+    icon: '🤖',
+    members: [
+      { id: 'member-120', name: 'Sarah Chen', role: 'AI Product Lead', roleEs: 'Líder de Producto IA', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-121', name: 'James Wilson', role: 'ML Engineer', roleEs: 'Ingeniero ML', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-122', name: 'Priya Sharma', role: 'Data Scientist', roleEs: 'Científica de Datos', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-123', name: 'Marcus Johnson', role: 'Full Stack Developer', roleEs: 'Desarrollador Full Stack', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-124', name: 'Aisha Patel', role: 'Backend Engineer', roleEs: 'Ingeniera Backend', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-125', name: 'David Kim', role: 'DevOps Engineer', roleEs: 'Ingeniero DevOps', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-126', name: 'Emma Thompson', role: 'UX Researcher', roleEs: 'Investigadora UX', unitType: 'extended', area: 'Design', areaEs: 'Diseño' },
+      { id: 'member-127', name: 'Carlos Medina', role: 'QA Automation', roleEs: 'QA Automatización', unitType: 'extended', area: 'Quality', areaEs: 'Calidad' },
+    ],
+    alignment: 88,
+    keyResultIds: ['kr-9', 'kr-12'],
+    skillIds: ['skill-8', 'skill-11'],
+    unitType: 'core',
+    parentUnitIds: ['unit-3'],
+    metrics: { leadTime: 6, cycleTime: 2, throughput: 22, velocity: 62, happinessIndex: 9.1, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 10, cycleTime: 4, throughput: 14, velocity: 45, happinessIndex: 8.0 },
+      { sprint: 'S2', leadTime: 9, cycleTime: 4, throughput: 16, velocity: 48, happinessIndex: 8.3 },
+      { sprint: 'S3', leadTime: 8, cycleTime: 3, throughput: 18, velocity: 52, happinessIndex: 8.6 },
+      { sprint: 'S4', leadTime: 7, cycleTime: 3, throughput: 20, velocity: 56, happinessIndex: 8.8 },
+      { sprint: 'S5', leadTime: 7, cycleTime: 2, throughput: 21, velocity: 60, happinessIndex: 9.0 },
+      { sprint: 'S6', leadTime: 6, cycleTime: 2, throughput: 22, velocity: 62, happinessIndex: 9.1 },
+    ] },
+    teamCategory: 'digital-build' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 8.5, leadTimeForChanges: 1.5, changeFailureRate: 3,
+      deploymentFrequencyTrend: 'improving' as const, leadTimeForChangesTrend: 'improving' as const, changeFailureRateTrend: 'improving' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 4.0, leadTimeForChanges: 6, changeFailureRate: 8 },
+        { sprint: 'S2', deploymentFrequency: 5.2, leadTimeForChanges: 5, changeFailureRate: 6 },
+        { sprint: 'S3', deploymentFrequency: 6.0, leadTimeForChanges: 4, changeFailureRate: 5 },
+        { sprint: 'S4', deploymentFrequency: 7.2, leadTimeForChanges: 3, changeFailureRate: 4 },
+        { sprint: 'S5', deploymentFrequency: 8.0, leadTimeForChanges: 2, changeFailureRate: 3.5 },
+        { sprint: 'S6', deploymentFrequency: 8.5, leadTimeForChanges: 1.5, changeFailureRate: 3 },
+      ],
+    },
+  },
+  {
+    id: 'team-12',
+    name: 'Digital Commerce',
+    nameEs: 'Comercio Digital',
+    description: 'Building AI-driven e-commerce and marketplace solutions',
+    descriptionEs: 'Construyendo soluciones de comercio electrónico y marketplace con IA',
+    icon: '🛒',
+    members: [
+      { id: 'member-130', name: 'Lisa Wang', role: 'Product Manager', roleEs: 'Gerente de Producto', unitType: 'core', area: 'Product', areaEs: 'Producto' },
+      { id: 'member-131', name: 'Ryan O\'Brien', role: 'Senior Engineer', roleEs: 'Ingeniero Senior', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-132', name: 'Fatima Al-Hassan', role: 'AI/ML Specialist', roleEs: 'Especialista IA/ML', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-133', name: 'Alex Tremblay', role: 'Frontend Developer', roleEs: 'Desarrollador Frontend', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-134', name: 'Sophie Dubois', role: 'Data Engineer', roleEs: 'Ingeniera de Datos', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-135', name: 'Nathan Scott', role: 'Platform Engineer', roleEs: 'Ingeniero de Plataforma', unitType: 'extended', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-136', name: 'Maria Santos', role: 'UX Designer', roleEs: 'Diseñadora UX', unitType: 'extended', area: 'Design', areaEs: 'Diseño' },
+    ],
+    alignment: 82,
+    keyResultIds: ['kr-6', 'kr-13'],
+    skillIds: ['skill-5', 'skill-12'],
+    unitType: 'core',
+    parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 8, cycleTime: 3, throughput: 19, velocity: 58, happinessIndex: 8.4, leadTimeTrend: 'improving', cycleTimeTrend: 'stable', throughputTrend: 'improving', velocityTrend: 'improving', happinessTrend: 'stable', history: [
+      { sprint: 'S1', leadTime: 12, cycleTime: 5, throughput: 12, velocity: 42, happinessIndex: 7.8 },
+      { sprint: 'S2', leadTime: 11, cycleTime: 4, throughput: 14, velocity: 46, happinessIndex: 8.0 },
+      { sprint: 'S3', leadTime: 10, cycleTime: 4, throughput: 15, velocity: 50, happinessIndex: 8.1 },
+      { sprint: 'S4', leadTime: 9, cycleTime: 3, throughput: 17, velocity: 54, happinessIndex: 8.3 },
+      { sprint: 'S5', leadTime: 9, cycleTime: 3, throughput: 18, velocity: 56, happinessIndex: 8.4 },
+      { sprint: 'S6', leadTime: 8, cycleTime: 3, throughput: 19, velocity: 58, happinessIndex: 8.4 },
+    ] },
+    teamCategory: 'digital-build' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 6.2, leadTimeForChanges: 2.5, changeFailureRate: 4.5,
+      deploymentFrequencyTrend: 'improving' as const, leadTimeForChangesTrend: 'improving' as const, changeFailureRateTrend: 'improving' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 3.0, leadTimeForChanges: 8, changeFailureRate: 10 },
+        { sprint: 'S2', deploymentFrequency: 3.8, leadTimeForChanges: 6, changeFailureRate: 8 },
+        { sprint: 'S3', deploymentFrequency: 4.5, leadTimeForChanges: 5, changeFailureRate: 7 },
+        { sprint: 'S4', deploymentFrequency: 5.2, leadTimeForChanges: 4, changeFailureRate: 6 },
+        { sprint: 'S5', deploymentFrequency: 5.8, leadTimeForChanges: 3, changeFailureRate: 5 },
+        { sprint: 'S6', deploymentFrequency: 6.2, leadTimeForChanges: 2.5, changeFailureRate: 4.5 },
+      ],
+    },
+  },
+  {
+    id: 'team-13',
+    name: 'AI Customer Intelligence',
+    nameEs: 'Inteligencia de Cliente con IA',
+    description: 'Building AI-powered customer insights and personalization engine',
+    descriptionEs: 'Construyendo motor de insights y personalización de clientes con IA',
+    icon: '🧠',
+    members: [
+      { id: 'member-140', name: 'Jennifer Lee', role: 'Engineering Manager', roleEs: 'Gerente de Ingeniería', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-141', name: 'Michael Brown', role: 'ML Engineer', roleEs: 'Ingeniero ML', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-142', name: 'Ananya Gupta', role: 'Data Scientist', roleEs: 'Científica de Datos', unitType: 'core', area: 'AI', areaEs: 'IA' },
+      { id: 'member-143', name: 'Thomas Bernier', role: 'Backend Developer', roleEs: 'Desarrollador Backend', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-144', name: 'Rachel Green', role: 'Frontend Developer', roleEs: 'Desarrolladora Frontend', unitType: 'core', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-145', name: 'Omar Hassan', role: 'SRE Engineer', roleEs: 'Ingeniero SRE', unitType: 'extended', area: 'Technology', areaEs: 'Tecnología' },
+      { id: 'member-146', name: 'Laura Gagné', role: 'Product Designer', roleEs: 'Diseñadora de Producto', unitType: 'extended', area: 'Design', areaEs: 'Diseño' },
+    ],
+    alignment: 85,
+    keyResultIds: ['kr-8', 'kr-9'],
+    skillIds: ['skill-6', 'skill-8'],
+    unitType: 'core',
+    parentUnitIds: ['unit-2'],
+    metrics: { leadTime: 7, cycleTime: 3, throughput: 20, velocity: 55, happinessIndex: 8.7, leadTimeTrend: 'improving', cycleTimeTrend: 'improving', throughputTrend: 'improving', velocityTrend: 'stable', happinessTrend: 'improving', history: [
+      { sprint: 'S1', leadTime: 11, cycleTime: 5, throughput: 13, velocity: 48, happinessIndex: 7.9 },
+      { sprint: 'S2', leadTime: 10, cycleTime: 5, throughput: 15, velocity: 50, happinessIndex: 8.1 },
+      { sprint: 'S3', leadTime: 9, cycleTime: 4, throughput: 16, velocity: 52, happinessIndex: 8.3 },
+      { sprint: 'S4', leadTime: 8, cycleTime: 4, throughput: 18, velocity: 54, happinessIndex: 8.5 },
+      { sprint: 'S5', leadTime: 8, cycleTime: 3, throughput: 19, velocity: 55, happinessIndex: 8.6 },
+      { sprint: 'S6', leadTime: 7, cycleTime: 3, throughput: 20, velocity: 55, happinessIndex: 8.7 },
+    ] },
+    teamCategory: 'digital-build' as const,
+    devOpsMetrics: {
+      deploymentFrequency: 7.0, leadTimeForChanges: 2.0, changeFailureRate: 3.5,
+      deploymentFrequencyTrend: 'improving' as const, leadTimeForChangesTrend: 'improving' as const, changeFailureRateTrend: 'improving' as const,
+      history: [
+        { sprint: 'S1', deploymentFrequency: 3.5, leadTimeForChanges: 7, changeFailureRate: 9 },
+        { sprint: 'S2', deploymentFrequency: 4.2, leadTimeForChanges: 6, changeFailureRate: 7 },
+        { sprint: 'S3', deploymentFrequency: 5.0, leadTimeForChanges: 5, changeFailureRate: 6 },
+        { sprint: 'S4', deploymentFrequency: 5.8, leadTimeForChanges: 3.5, changeFailureRate: 5 },
+        { sprint: 'S5', deploymentFrequency: 6.5, leadTimeForChanges: 2.5, changeFailureRate: 4 },
+        { sprint: 'S6', deploymentFrequency: 7.0, leadTimeForChanges: 2.0, changeFailureRate: 3.5 },
+      ],
+    },
   },
 ];
 
